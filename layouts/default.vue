@@ -1,8 +1,8 @@
 <template>
-  <div>
-    <Navbar />
-    <div>
-      <slot />
+    <div class="relative">
+        <Navbar />
+        <UContainer class="py-4">
+            <slot />
+        </UContainer>
     </div>
-  </div>
 </template>

@@ -1,8 +1,11 @@
 <script setup lang="ts">
+const { data: healthCheckData, refresh } = await useFetch("/api/healthz");
 </script>
 
 <template>
-  <div>
-    <h1>Homepage</h1>
-  </div>
+    <div>
+        <h1>Homepage</h1>
+        <p>Health check: {{ healthCheckData }}</p>
+        <UButton @click="refresh">Refresh</UButton>
+    </div>
 </template>
