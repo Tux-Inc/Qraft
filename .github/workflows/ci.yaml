@@ -18,7 +18,7 @@ jobs:
           node-version: 16.14.2
 
       # Install packages
-      - run: npm ci
+      - run: npm i
 
       # Generate prisma client & push to db
       - run: echo "DATABASE_URL=file:./db.sqlite" > .env
@@ -43,7 +43,7 @@ jobs:
           node-version: 16.14.2
 
       # Install packages
-      - run: npm ci
+      - run: npm i
 
       # Generate prisma client & push to db
       - run: echo "DATABASE_URL=file:./db.sqlite" > .env
