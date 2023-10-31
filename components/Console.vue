@@ -1,7 +1,9 @@
-<script setup lang="ts"></script>
+<script lang="ts" setup></script>
 
 <template>
     <UContainer>
+        <div></div>
+        <div></div>
         <div
             class="relative z-10 rounded-xl shadow-lg xl:ml-0 bg-dark backdrop-filter backdrop-blur-lg bg-opacity-30 border-b border-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:bg-opacity-30"
         >
@@ -20,8 +22,22 @@
             <div class="relative">
                 <pre
                     class="text-sm leading-6 text-slate-50 flex ligatures-none overflow-auto"
-                ><code class="flex-none min-w-full p-5"><span class="flex"><svg viewBox="0 -9 3 24" aria-hidden="true" class="flex-none overflow-visible text-pink-400 w-auto h-6 mr-3"><path d="M0 0L3 3L0 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span class="flex-auto">npm install -D tailwindcss</span></span><span class="flex"><svg viewBox="0 -9 3 24" aria-hidden="true" class="flex-none overflow-visible text-pink-400 w-auto h-6 mr-3"><path d="M0 0L3 3L0 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span class="flex-auto">npx tailwindcss init</span></span></code></pre>
+                ><code class="flex-none min-w-full p-5"><span class="flex"><svg aria-hidden="true" class="flex-none overflow-visible text-pink-400 w-auto h-6 mr-3"
+                                                                                viewBox="0 -9 3 24"><path
+                    d="M0 0L3 3L0 6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                    stroke-width="2"></path></svg><span
+                    class="flex-auto">npm install -D tailwindcss</span></span><span class="flex"><svg
+                    aria-hidden="true" class="flex-none overflow-visible text-pink-400 w-auto h-6 mr-3"
+                    viewBox="0 -9 3 24"><path d="M0 0L3 3L0 6" fill="none"
+                                                                                           stroke="currentColor"
+                                                                                           stroke-linecap="round"
+                                                                                           stroke-linejoin="round"
+                                                                                           stroke-width="2"></path></svg><span
+                    class="flex-auto">npx tailwindcss init</span></span></code></pre>
             </div>
+        </div>
+        <div class="m">
+            <UInput v-model="Commandprompt" placeholder="/ Command there !" />
         </div>
     </UContainer>
 </template>
