@@ -7,5 +7,6 @@ const { data: healthCheckData, refresh } = await useFetch("/api/healthz");
         <h1>Homepage</h1>
         <p>Health check: {{ healthCheckData }}</p>
         <UButton @click="refresh">Refresh</UButton>
+        <Console />
     </div>
 </template>
