@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const { data: healthCheckData, refresh } = await useFetch("/api/healthz");
+import '~/assets/css/main.css'
 </script>
 
 <template>
