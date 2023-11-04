@@ -2,7 +2,6 @@
 import ServerManager from "~/components/ServerManager.vue";
 
 const { data: healthCheckData, refresh } = await useFetch("/api/healthz");
-import '~/assets/css/main.css'
 </script>
 
 <template>
