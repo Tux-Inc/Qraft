@@ -84,7 +84,7 @@ const userItems = [
 
 <template>
     <div
-        class="sticky top-0 w-full px-8 py-4 bg-dark backdrop-filter backdrop-blur-lg bg-opacity-30 border-b border-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:bg-opacity-30"
+        class="sticky top-0 w-full px-8 py-4 bg-dark backdrop-filter backdrop-blur-lg bg-opacity-30 border-b border-primary-200/75 dark:border-primary-900/75 dark:bg-gray-800 dark:bg-opacity-30"
     >
         <UContainer class="flex justify-between items-center">
             <NuxtImg

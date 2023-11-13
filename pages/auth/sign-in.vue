@@ -54,57 +54,62 @@ async function onSubmit(event: FormSubmitEvent<any>) {
 }
 </script>
 <template>
-    <UContainer class="flex flex-col items-center justify-center h-screen">
-        <div
-            class="flex flex-col gap-4 items-center justify-center bg-white rounded-lg dark:bg-gray-800 p-8"
-        >
-            <div class="flex flex-col items-center justify-center">
-                <NuxtImg
-                    src="/logo-w-text.svg"
-                    alt="Qraft logo"
-                    width="150"
-                    height="150"
-                />
-            </div>
-            <div>
-                <UForm
-                    :validate="validate"
-                    :state="state"
-                    class="space-y-4"
-                    @submit="onSubmit"
-                >
-                    <UFormGroup label="Username" name="username">
-                        <UInput
-                            v-model="state.username"
-                            type="username"
-                            placeholder="Username"
-                            icon="i-heroicons-user"
-                        />
-                    </UFormGroup>
-                    <UFormGroup label="Password" name="password">
-                        <UInput
-                            v-model="state.password"
-                            type="password"
-                            placeholder="Password"
-                            icon="i-heroicons-lock-closed"
-                        />
-                    </UFormGroup>
-                    <UButton
-                        type="submit"
-                        icon="i-heroicons-arrow-right-on-rectangle"
-                        :loading="state.isLoading"
+    <div>
+        <HeroCubeBackground />
+        <UContainer class="flex flex-col items-center justify-center h-screen">
+            <div
+                class="flex flex-col gap-4 items-center justify-center bg-white rounded-lg dark:bg-gray-800 p-8"
+            >
+                <div class="flex flex-col items-center justify-center">
+                    <NuxtImg
+                        src="/logo-w-text.svg"
+                        alt="Qraft logo"
+                        width="150"
+                        height="150"
+                    />
+                </div>
+                <div>
+                    <UForm
+                        :validate="validate"
+                        :state="state"
+                        class="space-y-4"
+                        @submit="onSubmit"
                     >
-                        Sign In
-                    </UButton>
-                </UForm>
+                        <UFormGroup label="Username" name="username">
+                            <UInput
+                                v-model="state.username"
+                                type="username"
+                                placeholder="Username"
+                                icon="i-heroicons-user"
+                            />
+                        </UFormGroup>
+                        <UFormGroup label="Password" name="password">
+                            <UInput
+                                v-model="state.password"
+                                type="password"
+                                placeholder="Password"
+                                icon="i-heroicons-lock-closed"
+                            />
+                        </UFormGroup>
+                        <UButton
+                            type="submit"
+                            icon="i-heroicons-arrow-right-on-rectangle"
+                            :loading="state.isLoading"
+                        >
+                            Sign In
+                        </UButton>
+                    </UForm>
+                </div>
             </div>
-        </div>
-        <div class="mt-4">
-            <span class="text-gray-500 dark:text-gray-400 flex items-center">
-                <UIcon name="i-heroicons-information-circle" class="mr-1" />
-                Need help? Check out our&nbsp;
-                <ULink href="#" class="text-primary">help center </ULink>
-            </span>
-        </div>
-    </UContainer>
+            <div class="mt-4">
+                <span
+                    class="text-gray-500 dark:text-gray-400 flex items-center"
+                >
+                    <UIcon name="i-heroicons-information-circle" class="mr-1" />
+                    Need help? Check out our&nbsp;
+                    <ULink href="#" class="text-primary">help center </ULink>
+                </span>
+            </div>
+        </UContainer>
+    </div>
 </template>
