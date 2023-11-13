@@ -55,10 +55,10 @@ async function onSubmit(event: FormSubmitEvent<any>) {
 </script>
 <template>
     <div>
-        <HeroCubeBackground />
+        <HeroCubeBackground class="absolute" />
         <UContainer class="flex flex-col items-center justify-center h-screen">
             <div
-                class="flex flex-col gap-4 items-center justify-center bg-white rounded-lg dark:bg-gray-800 p-8"
+                class="flex z-10 flex-col gap-4 items-center justify-center bg-white rounded-lg dark:bg-gray-800 p-8"
             >
                 <div class="flex flex-col items-center justify-center">
                     <NuxtImg
@@ -101,7 +101,7 @@ async function onSubmit(event: FormSubmitEvent<any>) {
                     </UForm>
                 </div>
             </div>
-            <div class="mt-4">
+            <div class="mt-4 z-10">
                 <span
                     class="text-gray-500 dark:text-gray-400 flex items-center"
                 >
