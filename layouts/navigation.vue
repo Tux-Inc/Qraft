@@ -1,5 +1,5 @@
 <!--
-  - File Name: index.vue
+  - File Name: default.vue
   - Author: neptos
   - Creation Date: 2023
   -
@@ -24,23 +24,11 @@
   - THE SOFTWARE.
   -->
 
-<script setup lang="ts">
-const { data: healthCheckData, refresh } = await useFetch("/api/healthz");
-import "~/assets/css/main.css";
-definePageMeta({
-    title: "Home",
-    description: "Home page",
-    url: "/",
-    image: "/logo-w-text.svg",
-    layout: "navigation",
-});
-</script>
-
 <template>
-    <div>
-        <h1>Homepage</h1>
-        <p>Health check: {{ healthCheckData }}</p>
-        <UButton @click="refresh">Refresh</UButton>
-        <Console />
+    <div class="relative">
+        <Navbar />
+        <UContainer class="py-4">
+            <slot />
+        </UContainer>
     </div>
 </template>
