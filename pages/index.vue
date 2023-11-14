@@ -28,6 +28,12 @@
 import ServerManager from "~/components/ServerManager.vue";
 
 const { data: healthCheckData, refresh } = await useFetch("/api/healthz");
+console.log(
+    await useFetch("/api/auth/sign-in", {
+        method: "POST",
+        body: { username: "admin", password: "admin" },
+    }),
+);
 import "~/assets/css/main.css";
 definePageMeta({
     title: "Home",
@@ -40,7 +46,8 @@ definePageMeta({
 
 <template>
     <div>
-        <h1>Homepage</h1>
+        <h1 class="text-4xl font-bold">Home</h1>
+        <p class="text-lg">Welcome back, John Doe!</p>
         <p>Health check: {{ healthCheckData }}</p>
         <UButton @click="refresh">Refresh</UButton>
         <Console />

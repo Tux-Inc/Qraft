@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "prisma generate && nuxt dev",
+    "dev": "prisma generate && prisma db push && nuxt dev",
     "build": "prisma generate && nuxt build",
     "start": "NODE_ENV=production node .output/server/index.mjs",
     "test": "TZ=UTC vitest --run",
@@ -36,6 +36,7 @@
   },
   "dependencies": {
     "@nuxt/ui": "^2.10.0",
-    "@prisma/client": "^4.8.1"
+    "@prisma/client": "^4.8.1",
+    "bcrypt": "^5.1.1"
   }
 }

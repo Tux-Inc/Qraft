@@ -39,11 +39,13 @@ export default defineNuxtConfig({
     css: ["~/assets/css/main.css"],
     runtimeConfig: {
         version: "0.0.1",
+        cookieName: process.env.COOKIE_NAME || "qraftauth",
+        cookieSecret: process.env.COOKIE_SECRET,
+        cookieExpires: parseInt(process.env.COOKIE_EXPIRES || "604800"),
     },
     typescript: {
         shim: false,
     },
     modules: ["@nuxt/ui", "@nuxt/image"],
-    css: ["~/assets/css/main.css"],
     devtools: { enabled: true },
 });

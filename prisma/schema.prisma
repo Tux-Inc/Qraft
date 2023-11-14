@@ -9,8 +9,12 @@ datasource db {
   // This value is read from the .env file.
   url      = env("DATABASE_URL")
 }
-model Example {
-  id          String @id @default(uuid())
-  description String
-  details     String
+
+model User {
+  id        String   @id @default(uuid())
+  username  String   @unique
+  password  String
+  role      String   @default("USER")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

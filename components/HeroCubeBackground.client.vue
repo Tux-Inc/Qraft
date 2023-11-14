@@ -1,12 +1,10 @@
 <script lang="ts" setup>
 import { ref, computed } from "vue";
 
-// Detecting window size
 const width = ref(window.innerWidth);
 const height = ref(window.innerHeight);
 
-// Updating cell size, rows, and columns based on window size
-const cellSize = computed(() => `${Math.max(width.value / 20, 30)}px`); // Adjust the divisor for more/less cells
+const cellSize = computed(() => `${Math.max(width.value / 20, 30)}px`);
 const rows = computed(
     () => Math.floor(height.value / parseInt(cellSize.value)) + 1,
 );
@@ -14,16 +12,13 @@ const columns = computed(() =>
     Math.floor(width.value / parseInt(cellSize.value)),
 );
 
-// Update on window resize
 window.addEventListener("resize", () => {
     width.value = window.innerWidth;
     height.value = window.innerHeight;
 });
 
-// New: Array to hold opacity values for each cell
 const opacities = ref<number[]>([]);
 
-// Method to randomly change opacity
 const randomizeOpacity = () => {
     const totalCells = rows.value * columns.value;
     for (let i = 0; i < totalCells; i++) {
@@ -31,11 +26,8 @@ const randomizeOpacity = () => {
     }
 };
 
-// Initial randomization
 randomizeOpacity();
-
-// Optional: Re-randomize opacity at regular intervals
-setInterval(randomizeOpacity, 500); // Change every 2 seconds
+setInterval(randomizeOpacity, 500);
 </script>
 
 <template>
