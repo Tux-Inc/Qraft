@@ -1,3 +1,4 @@
+
 <script setup lang="ts">
 const ServerName = "Server-X";
 const ServerStatus = "Online";
