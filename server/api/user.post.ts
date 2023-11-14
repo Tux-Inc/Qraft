@@ -22,6 +22,13 @@ export default defineEventHandler(async (event) => {
 
     const hashedPassword = await hash(body.password);
     body.password = hashedPassword;
+    console.log(body);
 
-    const user = await createUser(body);
+    const userWithPassword = await createUser(body);
+
+    const { password: _password, ...userWithoutPassword } = userWithPassword;
+
+    return {
+        user: userWithoutPassword,
+    };
 });

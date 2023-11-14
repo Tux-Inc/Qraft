@@ -33,6 +33,9 @@ definePageMeta({
     image: "/logo-w-text.svg",
 });
 
+const toast = useToast();
+const router = useRouter();
+
 const state = reactive({
     username: undefined,
     password: undefined,
@@ -48,8 +51,26 @@ const validate = (state: any): FormError[] => {
 
 async function onSubmit(event: FormSubmitEvent<any>) {
     state.isLoading = true;
-    console.log(event.data);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    const { data, error } = await useFetch("/api/auth/sign-in", {
+        method: "POST",
+        body: JSON.stringify(event.data),
+    });
+    if (error.value) {
+        toast.add({
+            title: "Authentication failed",
+            icon: "i-heroicons-x-circle",
+            description: error.value?.message,
+            color: "red",
+        });
+    } else {
+        toast.add({
+            title: "Authentication successful",
+            icon: "i-heroicons-check-circle",
+            description: `Welcome back, ${data.value?.user.username}!`,
+            color: "green",
+        });
+        await router.push("/");
+    }
     state.isLoading = false;
 }
 </script>
@@ -89,6 +110,7 @@ async function onSubmit(event: FormSubmitEvent<any>) {
                                 type="password"
                                 placeholder="Password"
                                 icon="i-heroicons-lock-closed"
+                                autocomplete="true"
                             />
                         </UFormGroup>
                         <UButton

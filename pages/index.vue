@@ -26,14 +26,6 @@
 
 <script setup lang="ts">
 import ServerManager from "~/components/ServerManager.vue";
-
-const { data: healthCheckData, refresh } = await useFetch("/api/healthz");
-console.log(
-    await useFetch("/api/auth/sign-in", {
-        method: "POST",
-        body: { username: "admin", password: "admin" },
-    }),
-);
 import "~/assets/css/main.css";
 definePageMeta({
     title: "Home",
@@ -41,7 +33,10 @@ definePageMeta({
     url: "/",
     image: "/logo-w-text.svg",
     layout: "navigation",
+    middleware: ["auth"],
 });
+
+const { data: healthCheckData, refresh } = await useFetch("/api/healthz");
 </script>
 
 <template>
