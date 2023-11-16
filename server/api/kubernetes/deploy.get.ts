@@ -1,38 +1,95 @@
 import k8s from "@kubernetes/client-node";
 
-const cluster = {
-    name: process.env.CLUSTER_NAME || "local",
-    server: process.env.CLUSTER_SERVER || "http://127.0.0.1/",
-};
-
-const user = {
-    user: {
-        "auth-provider": {
-            config: { "access-token": process.env.CLUSTER_PASSWORD || "token" },
-        },
-    },
-};
-
-const context = {
-    name: "my-context",
-    user: user.name,
-    cluster: cluster.name,
-};
+const config = useRuntimeConfig();
 
 const kc = new k8s.KubeConfig();
-kc.loadFromOptions({
-    clusters: [cluster],
-    users: [user],
-    contexts: [context],
-    currentContext: context.name,
-});
-const k8sApi = kc.makeApiClient(k8s.CoreV1Api);
-
+kc.loadFromOptions(config.KubeConfig);
+const k8sApi = kc.makeApiClient(k8s.AppsV1Api);
+const deployment_namespace = "qraft";
+const deployment_body: k8s.V1Deployment = {
+    kind: "Deployment",
+    apiVersion: "apps/v1",
+    metadata: {
+        name: "mc",
+        labels: {
+            "io.kompose.service": "mc",
+        },
+        annotations: {
+            "kompose.cmd": "kompose convert --json",
+            "kompose.version": "1.31.2 (a92241f79)",
+        },
+    },
+    spec: {
+        replicas: 1,
+        selector: {
+            matchLabels: {
+                "io.kompose.service": "mc",
+            },
+        },
+        template: {
+            metadata: {
+                labels: {
+                    "io.kompose.network/mc-default": "true",
+                    "io.kompose.service": "mc",
+                },
+                annotations: {
+                    "kompose.cmd": "kompose convert --json",
+                    "kompose.version": "1.31.2 (a92241f79)",
+                },
+            },
+            spec: {
+                volumes: [
+                    {
+                        name: "mc-claim0",
+                        persistentVolumeClaim: {
+                            claimName: "mc-claim0",
+                        },
+                    },
+                ],
+                containers: [
+                    {
+                        name: "mc",
+                        image: "itzg/minecraft-server",
+                        ports: [
+                            {
+                                hostPort: 25565,
+                                containerPort: 25565,
+                                protocol: "TCP",
+                            },
+                        ],
+                        env: [
+                            {
+                                name: "EULA",
+                                value: "TRUE",
+                            },
+                        ],
+                        resources: {},
+                        volumeMounts: [
+                            {
+                                name: "mc-claim0",
+                                mountPath: "/data",
+                            },
+                        ],
+                        stdin: true,
+                        tty: true,
+                    },
+                ],
+                restartPolicy: "Always",
+            },
+        },
+        strategy: {
+            type: "Recreate",
+        },
+    },
+    status: {},
+};
 export default defineEventHandler(async (event) => {
-    const podsRes = await k8sApi.listNamespacedPod("default");
-    console.log(podsRes.body);
+    const Deployments_Result = await k8sApi.createNamespacedDeployment(
+        deployment_namespace,
+        deployment_body,
+    );
 
     return {
-        pods: podsRes,
+        deploy: Deployments_Result,
     };
 });
