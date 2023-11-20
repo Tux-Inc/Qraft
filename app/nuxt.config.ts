@@ -39,6 +39,7 @@ export default defineNuxtConfig({
     css: ["~/assets/css/main.css"],
     runtimeConfig: {
         version: "0.0.1",
+        deployment_namespace: "qraft",
         cookieName: process.env.COOKIE_NAME || "qraftauth",
         cookieSecret: process.env.COOKIE_SECRET,
         cookieExpires: parseInt(process.env.COOKIE_EXPIRES || "604800"),
