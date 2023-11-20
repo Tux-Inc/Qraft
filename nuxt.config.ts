@@ -39,11 +39,41 @@ export default defineNuxtConfig({
     css: ["~/assets/css/main.css"],
     runtimeConfig: {
         version: "0.0.1",
+        deployment_namespace: "qraft",
+        proxy_image: "itzg/bungeecord",
+        KubeConfig: {
+            clusters: [
+                {
+                    name: "microk8s-cluster",
+                    cluster: {
+                        server: "https://192.168.0.101:16443",
+                        "certificate-authority-data": "redacted",
+                    },
+                },
+            ],
+            users: [
+                {
+                    name: "admin",
+                    user: {
+                        token: "redacted",
+                    },
+                },
+            ],
+            contexts: [
+                {
+                    name: "microk8s",
+                    context: {
+                        cluster: "microk8s-cluster",
+                        user: "admin",
+                    },
+                },
+            ],
+            currentContext: "microk8s",
+        },
     },
     typescript: {
         shim: false,
     },
     modules: ["@nuxt/ui", "@nuxt/image"],
-    css: ["~/assets/css/main.css"],
     devtools: { enabled: true },
 });

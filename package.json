@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "prisma generate && prisma db push && nuxt dev",
     "build": "prisma generate && nuxt build",
-    "start": "NODE_ENV=production node .output/server/index.mjs",
+    "start": "node .output/server/index.mjs",
     "test": "TZ=UTC vitest --run",
     "test:components": "TZ=UTC vitest --run components/",
     "test:watch": "TZ=UTC vitest",

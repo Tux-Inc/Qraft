@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: qraft
+  name: proxy-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: proxy
+  template:
+    metadata:
+      labels:
+        app: proxy
+    spec:
+      containers:
+        - name: proxy-server
+          image: itzg/bungeecord
+          ports:
+            - containerPort: 25577
+          env:
+            - name: EULA
+              value: "true"
+            - name: TYPE
+              value: VELOCITY
+            - name: ENABLE_RCON
+              value: "true"
+            - name: PLUGINS
+              value: ""
