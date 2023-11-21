@@ -1,18 +1,45 @@
-import k8s, {
-    V1LabelSelector,
-    V1LabelSelectorRequirement,
-} from "@kubernetes/client-node";
+import k8s from "@kubernetes/client-node";
 import { integer } from "vscode-languageserver-types";
 
 const config = useRuntimeConfig();
+
+export class ProxyService extends k8s.V1Service {
+    constructor(
+        name: string,
+        namespace: string,
+        containerName: string,
+        ports: [k8s.V1ServicePort],
+        type: string,
+    ) {
+        super();
+
+        this.kind = "Service";
+        this.apiVersion = "v1";
+        const metadata = new k8s.V1ObjectMeta();
+        metadata.namespace = config.deployment_namespace;
+        metadata.name = "svc-" + (name || "proxyqraft");
+        this.metadata = metadata;
+
+        const spec = new k8s.V1ServiceSpec();
+        spec.selector = { app: (containerName || "proxyqraft") + "-cont" };
+        const defaultports = new k8s.V1ServicePort();
+        defaultports.protocol = "TCP";
+        defaultports.port = 25577;
+        defaultports.targetPort = 25565;
+        spec.ports = ports || [defaultports];
+        spec.type = type || "LoadBalancer";
+        this.spec = spec;
+    }
+}
 
 export class ProxyDeployment extends k8s.V1Deployment {
     constructor(
         name: string,
         namespace?: string,
+
         replicas?: integer,
         containerName?: string,
-        port?: integer,
+        ports?: [k8s.V1ContainerPort],
         type?: string,
         env?: [],
     ) {
@@ -27,7 +54,7 @@ export class ProxyDeployment extends k8s.V1Deployment {
         const container = new k8s.V1Container();
         container.name = (containerName || "proxyqraft") + "-cont";
         container.image = config.proxy_image || "itzg/bungeecord";
-        container.ports = [
+        container.ports = ports || [
             { containerPort: 25577, hostPort: 25577, protocol: "TCP" },
         ];
         container.env = env || [
@@ -44,7 +71,7 @@ export class ProxyDeployment extends k8s.V1Deployment {
         template.spec = new k8s.V1PodSpec();
         template.spec.containers = [container];
 
-        const selector = new V1LabelSelector();
+        const selector = new k8s.V1LabelSelector();
         selector.matchLabels = {
             app: (containerName || "proxyqraft") + "-cont",
         };
