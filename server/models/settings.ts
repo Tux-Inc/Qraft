@@ -1,15 +1,13 @@
 import { PrismaClient } from "@prisma/client";
 import type { Settings } from "~/types/settings";
-import k8s, { KubeConfig } from "@kubernetes/client-node";
+import k8s from "@kubernetes/client-node";
 
 const prisma = new PrismaClient();
 
-export async function getKubeConfig(): Promise<k8s.KubeConfig> {
-    return (
-        (prisma.settings.findUnique({
-            where: { name: "kubeconfig" },
-        }) as KubeConfig) || new KubeConfig()
-    );
+export async function getKubeConfig(): Promise<Settings | null> {
+    return prisma.settings.findUnique({
+        where: { name: "kubeconfig" },
+    });
 }
 
 export async function getSetting(name: string): Promise<Settings | null> {
@@ -17,12 +15,15 @@ export async function getSetting(name: string): Promise<Settings | null> {
 }
 
 export async function updateSetting(
-    name: string,
-    settings: Settings,
+    SettingName: string,
+    settings: string,
 ): Promise<Settings> {
-    return prisma.settings.update({ where: { name }, data: settings });
+    return prisma.settings.update({
+        where: { name: SettingName },
+        data: settings,
+    });
 }
 
-export async function deleteSetting(name: String): Promise<boolean> {
-    return prisma.settings.delete({ where: { name } });
+export async function deleteSetting(SettingName: string): Promise<Settings> {
+    return prisma.settings.delete({ where: { name: SettingName } });
 }
