@@ -41,6 +41,7 @@ export default defineNuxtConfig({
         version: "0.0.1",
         deployment_namespace: "qraft",
         proxy_image: "itzg/bungeecord",
+        server_image: "itzg/minecraft-server",
         KubeConfig: {
             clusters: [
                 {
