@@ -25,6 +25,15 @@
   -->
 
 <script setup lang="ts">
+import type { UserWithoutPassword } from "@/types/user";
+
+const user = ref<UserWithoutPassword | null>(null);
+
+onMounted(async () => {
+    user.value = useAuthUser();
+    console.log(user.value);
+});
+
 const instancesItems = [
     [
         {
@@ -45,6 +54,16 @@ const instancesItems = [
             label: "Manage templates",
             icon: "i-heroicons-cube-transparent",
             to: "/instances/templates",
+        },
+    ],
+];
+
+const clusterItems = [
+    [
+        {
+            label: "Manage cluster",
+            icon: "i-heroicons-cube",
+            to: "/clusters",
         },
     ],
 ];
@@ -107,6 +126,19 @@ const userItems = [
                         trailing-icon="i-heroicons-chevron-down-20-solid"
                     />
                 </UDropdown>
+                <UDropdown
+                    :items="clusterItems"
+                    :popper="{ placement: 'bottom-start' }"
+                >
+                    <UButton
+                        variant="ghost"
+                        color="primary"
+                        size="md"
+                        icon="i-heroicons-server-stack"
+                        label="Cluster"
+                        trailing-icon="i-heroicons-chevron-down-20-solid"
+                    />
+                </UDropdown>
             </div>
             <div class="flex items-center gap-2">
                 <UDropdown
@@ -118,7 +150,7 @@ const userItems = [
                         color="primary"
                         size="md"
                         icon="i-heroicons-user-circle"
-                        label="User"
+                        :label="user?.username ?? 'Loading...'"
                         trailing-icon="i-heroicons-chevron-down-20-solid"
                     />
                 </UDropdown>

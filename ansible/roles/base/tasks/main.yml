@@ -1,0 +1,24 @@
+- name: "Install useful packages"
+  ansible.builtin.apt: name={{ item }} state=latest update_cache=true
+  with_items:
+    - vim
+    - git
+    - curl
+    - wget
+    - unzip
+    - build-essential
+    - libssl-dev
+    - libffi-dev
+    - lsb-release
+    - software-properties-common
+    - apt-transport-https
+    - acl
+  become: true
+
+- name: "Set locale"
+  ansible.builtin.locale_gen: name=fr_FR.UTF-8 state=present
+  become: true
+
+- name: "Set timezone"
+  ansible.builtin.timezone: name=Europe/Paris
+  become: true
