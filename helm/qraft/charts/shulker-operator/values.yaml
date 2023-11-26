@@ -31,7 +31,6 @@ operator:
     allocator:
       host: agones-allocator.agones-system
       grpcPort: 443
-      mtlsSecretName: allocator-client.default
 
   resources:
     requests:

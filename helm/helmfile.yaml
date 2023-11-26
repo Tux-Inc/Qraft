@@ -1,0 +1,23 @@
+repositories:
+  - name: jetstack
+    url: https://charts.jetstack.io
+  - name: agones
+    url: https://agones.dev/chart/stable
+
+releases:
+  - name: cert-manager
+    namespace: default
+    chart: jetstack/cert-manager
+    version: 1.13.2
+    set:
+      - name: installCRDs
+        value: true
+  - name: agones
+    namespace: agones-system
+    chart: agones/agones
+    version: 1.36.0
+
+  - name: qraft
+    chart: ./qraft
+    namespace: shulker-system
+    version: 0.1.0
