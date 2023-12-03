@@ -1,8 +1,5 @@
 import k8s from "@kubernetes/client-node";
 import * as shulker from "~/server/utils/Shulker_utils";
-
-const config = useRuntimeConfig();
-
 const kc = new k8s.KubeConfig();
 kc.loadFromDefault();
 const k8sCRDApi = kc.makeApiClient(k8s.CustomObjectsApi);
