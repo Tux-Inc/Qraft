@@ -1,0 +1,42 @@
+apiVersion: shulkermc.io/v1alpha1
+kind: MinecraftCluster
+metadata:
+  name: getting-started
+spec: {}
+---
+apiVersion: shulkermc.io/v1alpha1
+kind: ProxyFleet
+metadata:
+  name: public
+spec:
+  clusterRef:
+    name: getting-started
+  replicas: 1
+  service:
+    type: LoadBalancer
+    externalTrafficPolicy: Local
+  template:
+    spec:
+      version:
+        channel: Velocity
+        name: latest
+      config: {}
+---
+apiVersion: shulkermc.io/v1alpha1
+kind: MinecraftServerFleet
+metadata:
+  name: lobby
+spec:
+  clusterRef:
+    name: getting-started
+  replicas: 1
+  template:
+    spec:
+      clusterRef:
+        name: getting-started
+      tags:
+        - lobby
+      version:
+        channel: Paper
+        name: '1.20.2'
+      config: {}
