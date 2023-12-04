@@ -3,7 +3,7 @@ name: Build and push app Docker image to GitHub
 on:
   push:
     branches:
-      - main
+      - feature/kubernetes
 
 jobs:
   build_and_push:
@@ -30,7 +30,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           context: "./app"
           tags: |
-            ghcr.io/tux-inc/qraft-app:latest
+            ghcr.io/tux-inc/qraft-app:latest-feature-kubernetes
             ghcr.io/tux-inc/qraft-app:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
