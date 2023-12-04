@@ -1,0 +1,19 @@
+apiVersion: shulkermc.io/v1alpha1
+kind: MinecraftServerFleet
+metadata:
+  name: lobby
+  namespace: qraft-cluster
+spec:
+  clusterRef:
+    name: getting-started
+  replicas: 1
+  template:
+    spec:
+      clusterRef:
+        name: getting-started
+      tags:
+        - lobby
+      version:
+        channel: Paper
+        name: '1.19.3'
+      config: {}

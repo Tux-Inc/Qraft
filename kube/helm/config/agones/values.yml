@@ -1,0 +1,8 @@
+agones:
+  allocator:
+    install: true
+gameservers:
+  namespaces:
+    - default
+    - shulker-system
+    - qraft-cluster
