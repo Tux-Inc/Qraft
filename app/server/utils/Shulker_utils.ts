@@ -7,17 +7,32 @@ class ShulkerMetadata {
         public namespace: string = config.deployment_namespace,
     ) {}
 }
+class ProxyFleetSpecTemplateSpec {
+    constructor(
+        public version: object = { channel: "Velocity", name: "latest" },
+        public config: object = {},
+    ) {}
+}
+class ProxyFleetSpecTemplate {
+    constructor(
+        public spec: ProxyFleetSpecTemplateSpec = new ProxyFleetSpecTemplateSpec(),
+    ) {}
+}
 class ProxyFleetSpecService {
     constructor(
         public type: string = "LoadBalancer",
-        public externalTraffiCPolicy: string = "Local",
+        public externalTrafficPolicy: string = "Local",
     ) {}
+}
+class ProxyFleetSpecClusterRef {
+    constructor(public name: string) {}
 }
 class ProxyFleetSpec {
     constructor(
-        public replicas: number | null,
-        public clusterRef: { name: string },
+        public clusterRef: ProxyFleetSpecClusterRef,
+        public replicas: number = 1,
         public services: ProxyFleetSpecService = new ProxyFleetSpecService(),
+        public template: ProxyFleetSpecTemplate = new ProxyFleetSpecTemplate(),
     ) {
         // Initialize other properties if needed
     }
@@ -32,9 +47,9 @@ class ProxyFleetStatus {
 class ProxyFleet {
     constructor(
         public metadata: ShulkerMetadata,
+        public spec: ProxyFleetSpec,
         public apiVersion: string = "shulkermc.io/v1alpha1",
         public kind: string = "ProxyFleet",
-        public spec?: ProxyFleetSpec,
         public status?: ProxyFleetStatus,
     ) {}
 }
@@ -108,6 +123,7 @@ export {
     ShulkerMetadata,
     ProxyFleet,
     ProxyFleetSpec,
+    ProxyFleetSpecClusterRef,
     ProxyFleetStatus,
     MinecraftServer,
     MinecraftServerSpec,
