@@ -25,14 +25,10 @@
   -->
 
 <script setup lang="ts">
-import type { UserWithoutPassword } from "@/types/user";
+import type { UserWithoutPassword } from "~/types/user";
 
-const user: Ref<UserWithoutPassword | undefined> = ref(undefined);
-
-onMounted(async () => {
-    user.value = useAuthUser().value?.user;
-    console.log(user);
-});
+const user: UserWithoutPassword | undefined = useAuthUser().value?.user;
+const { logout } = useAuth();
 
 const instancesItems = [
     [
@@ -71,7 +67,7 @@ const clusterItems = [
 const userItems = [
     [
         {
-            label: "ben@example.com",
+            label: user?.username ?? "Loading...",
             slot: "account",
             disabled: true,
         },
@@ -96,6 +92,7 @@ const userItems = [
         {
             label: "Sign out",
             icon: "i-heroicons-arrow-left-on-rectangle",
+            onClick: logout,
         },
     ],
 ];
@@ -103,7 +100,7 @@ const userItems = [
 
 <template>
     <div
-        class="sticky top-0 w-full px-8 py-4 bg-dark backdrop-filter backdrop-blur-lg bg-opacity-30 border-b border-primary-200/75 dark:border-primary-900/75 dark:bg-gray-800 dark:bg-opacity-30"
+        class="z-50 sticky top-0 w-full px-8 py-4 bg-dark backdrop-filter backdrop-blur-lg bg-opacity-30 border-b border-primary-200/75 dark:border-primary-900/75 dark:bg-gray-800 dark:bg-opacity-30"
     >
         <UContainer class="flex justify-between items-center">
             <NuxtImg

@@ -25,16 +25,27 @@
   -->
 
 <script setup lang="ts">
-definePageMeta({
-    middleware: ["auth"],
+const { $listen } = useNuxtApp();
+const isNewInstanceModalOpen = ref(false);
+$listen("instance:new", (type) => {
+    console.log(`New instance of type ${type} created!`);
+    isNewInstanceModalOpen.value = true;
 });
 </script>
 
 <template>
-    <div class="relative">
-        <Navbar />
-        <UContainer class="py-4">
-            <slot />
-        </UContainer>
+    <div class="flex flex-col justify-between relative h-screen">
+        <div>
+            <Navbar />
+            <UContainer
+                class="py-4 w-full justify-self-start place-content-start"
+            >
+                <slot />
+            </UContainer>
+        </div>
+        <Footer />
+        <UModal v-model="isNewInstanceModalOpen">
+            <NewInstanceModal />
+        </UModal>
     </div>
 </template>

@@ -25,7 +25,6 @@
   -->
 
 <script setup lang="ts">
-import ServerManager from "~/components/ServerManager.vue";
 import "~/assets/css/main.css";
 definePageMeta({
     title: "Home",
@@ -35,18 +34,55 @@ definePageMeta({
     layout: "navigation",
     middleware: ["auth"],
 });
-
-const { data: healthCheckData, refresh } = await useFetch("/api/healthz");
 const user = useAuthUser().value?.user;
+const { $event } = useNuxtApp();
+const sendEvent = (event: string, type: string) => $event(event, type);
 </script>
 
 <template>
-    <div>
-        <h1 class="text-4xl font-bold">Home</h1>
-        <p class="text-lg">Welcome back, {{ user?.username }}</p>
-        <p>Health check: {{ healthCheckData }}</p>
-        <UButton @click="refresh">Refresh</UButton>
-        <Console />
-        <ServerManager />
+    <div class="flex flex-col gap-8 p-4">
+        <div>
+            <h1 class="text-4xl font-bold">Home</h1>
+            <p class="text-lg">Welcome back, {{ user?.username }}</p>
+        </div>
+        <!-- <UsageChart /> -->
+        <InstanceList
+            title="Proxy fleet"
+            description="Your Minecraft proxies fleet"
+        >
+            <template #actions>
+                <UButton
+                    variant="solid"
+                    color="primary"
+                    size="md"
+                    icon="i-heroicons-plus-circle"
+                    label="Create proxy"
+                    @click="sendEvent('instance:new', 'proxy')"
+                />
+            </template>
+            <template #elements>
+                <InstancePreview />
+            </template>
+        </InstanceList>
+        <InstanceList
+            title="Servers fleet"
+            description="Your Minecraft servers fleet"
+        >
+            <template #actions>
+                <UButton
+                    variant="solid"
+                    color="primary"
+                    size="md"
+                    icon="i-heroicons-plus-circle"
+                    label="Create server"
+                    @click="sendEvent('instance:new', 'server')"
+                />
+            </template>
+            <template #elements>
+                <InstancePreview />
+                <InstancePreview />
+                <InstancePreview />
+            </template>
+        </InstanceList>
     </div>
 </template>

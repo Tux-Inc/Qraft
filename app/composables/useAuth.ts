@@ -29,11 +29,12 @@ export const useAuth = () => {
   };
 
   const logout = async () => {
-    const data = await $fetch("/auth/logout", {
+    const data = await $fetch("/api/auth/sign-out", {
       method: "POST",
     });
 
     setUser(data);
+    navigateTo("/auth/sign-in");
   };
 
   const me = async () => {
