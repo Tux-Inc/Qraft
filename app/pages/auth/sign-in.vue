@@ -35,6 +35,7 @@ definePageMeta({
 
 const toast = useToast();
 const router = useRouter();
+const { login } = useAuth();
 
 const state = reactive({
     username: undefined,
@@ -51,27 +52,26 @@ const validate = (state: any): FormError[] => {
 
 async function onSubmit(event: FormSubmitEvent<any>) {
     state.isLoading = true;
-    const { data, error } = await useFetch("/api/auth/sign-in", {
-        method: "POST",
-        body: JSON.stringify(event.data),
-    });
-    if (error.value) {
-        toast.add({
-            title: "Authentication failed",
-            icon: "i-heroicons-x-circle",
-            description: error.value?.message,
-            color: "red",
-        });
-    } else {
+    try {
+        const user = await login(event.data.username, event.data.password);
         toast.add({
             title: "Authentication successful",
             icon: "i-heroicons-check-circle",
-            description: `Welcome back, ${data.value?.user.username}!`,
+            description: `Welcome back, ${user.value?.user?.username}`,
             color: "green",
         });
         await router.push("/");
+        state.isLoading = false;
+    } catch (error: any) {
+        toast.add({
+            title: "Authentication failed",
+            icon: "i-heroicons-x-circle",
+            description: error.message,
+            color: "red",
+        });
+        state.isLoading = false;
+        return;
     }
-    state.isLoading = false;
 }
 </script>
 <template>

@@ -1,5 +1,5 @@
 import type { UserWithoutPassword } from "~/types/user"
 
-export const useAuthUser = () => {
-  return useState<UserWithoutPassword | null>("user", () => null)
+export const useAuthUser = (): Ref<{ user: UserWithoutPassword } | null> => {
+  return useState<{ user: UserWithoutPassword } | null>('user', () => null)
 }

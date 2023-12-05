@@ -1,9 +1,11 @@
 import { PrismaClient } from '@prisma/client'
+import { User } from '~/types/user'
 
 let prisma: PrismaClient
 declare module 'h3' {
   interface H3EventContext {
-    prisma: PrismaClient
+    prisma: PrismaClient,
+    user?: User
   }
 }
 

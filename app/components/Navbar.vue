@@ -27,11 +27,11 @@
 <script setup lang="ts">
 import type { UserWithoutPassword } from "@/types/user";
 
-const user = ref<UserWithoutPassword | null>(null);
+const user: Ref<UserWithoutPassword | undefined> = ref(undefined);
 
 onMounted(async () => {
-    user.value = useAuthUser();
-    console.log(user.value);
+    user.value = useAuthUser().value?.user;
+    console.log(user);
 });
 
 const instancesItems = [

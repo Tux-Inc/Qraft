@@ -33,15 +33,17 @@ definePageMeta({
     url: "/",
     image: "/logo-w-text.svg",
     layout: "navigation",
+    middleware: ["auth"],
 });
 
 const { data: healthCheckData, refresh } = await useFetch("/api/healthz");
+const user = useAuthUser().value?.user;
 </script>
 
 <template>
     <div>
         <h1 class="text-4xl font-bold">Home</h1>
-        <p class="text-lg">Welcome back, John Doe!</p>
+        <p class="text-lg">Welcome back, {{ user?.username }}</p>
         <p>Health check: {{ healthCheckData }}</p>
         <UButton @click="refresh">Refresh</UButton>
         <Console />

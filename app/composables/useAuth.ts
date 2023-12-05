@@ -2,18 +2,20 @@ import type { UserWithoutPassword } from "~/types/user";
 import { useAuthUser } from "./useAuthUser";
 
 export const useAuth = () => {
+  const config = useRuntimeConfig();
   const authUser = useAuthUser();
+  const authCookie = useCookie(config.cookieName);
 
   const setUser = (user: any) => {
     authUser.value = user;
   };
 
   const setCookie = (cookie: any) => {
-    cookie.value = cookie;
+    authCookie.value = cookie;
   };
 
   const login = async (username: string, password: string) => {
-    const data = await $fetch<UserWithoutPassword>("/auth/login", {
+    const data = await $fetch<UserWithoutPassword>("/api/auth/sign-in", {
       method: "POST",
       body: {
         username,
@@ -37,7 +39,7 @@ export const useAuth = () => {
   const me = async () => {
     if (!authUser.value) {
       try {
-        const data = await $fetch("/auth/me", {
+        const data = await $fetch("/api/auth/me", {
           headers: useRequestHeaders(["cookie"]) as HeadersInit,
         });
 
