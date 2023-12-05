@@ -7,8 +7,18 @@ class ShulkerMetadata {
         public namespace: string = config.deployment_namespace,
     ) {}
 }
+class ProxyFleetSpecService {
+    constructor(
+        public type: string = "LoadBalancer",
+        public externalTraffiCPolicy: string = "Local",
+    ) {}
+}
 class ProxyFleetSpec {
-    constructor(public replicas?: number | null) {
+    constructor(
+        public replicas: number | null,
+        public clusterRef: { name: string },
+        public services: ProxyFleetSpecService = new ProxyFleetSpecService(),
+    ) {
         // Initialize other properties if needed
     }
 }
