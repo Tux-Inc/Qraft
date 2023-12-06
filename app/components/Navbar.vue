@@ -30,40 +30,6 @@ import type { UserWithoutPassword } from "~/types/user";
 const user: UserWithoutPassword | undefined = useAuthUser().value?.user;
 const { logout } = useAuth();
 
-const instancesItems = [
-    [
-        {
-            label: "New instance",
-            icon: "i-heroicons-plus",
-            to: "/instances/new",
-        },
-    ],
-    [
-        {
-            label: "Manage instances",
-            icon: "i-heroicons-cube",
-            to: "/instances",
-        },
-    ],
-    [
-        {
-            label: "Manage templates",
-            icon: "i-heroicons-cube-transparent",
-            to: "/instances/templates",
-        },
-    ],
-];
-
-const clusterItems = [
-    [
-        {
-            label: "Manage cluster",
-            icon: "i-heroicons-cube",
-            to: "/clusters",
-        },
-    ],
-];
-
 const userItems = [
     [
         {
@@ -76,6 +42,7 @@ const userItems = [
         {
             label: "Settings",
             icon: "i-heroicons-cog-8-tooth",
+            to: "/settings",
         },
     ],
     [
@@ -108,34 +75,42 @@ const userItems = [
                 alt="Qraft logo"
                 width="100"
                 height="100"
+                @click="useRouter().push('/')"
+                class="cursor-pointer"
             />
             <div class="flex items-center gap-2">
-                <UDropdown
-                    :items="instancesItems"
-                    :popper="{ placement: 'bottom-start' }"
-                >
-                    <UButton
-                        variant="ghost"
-                        color="primary"
-                        size="md"
-                        icon="i-heroicons-cube"
-                        label="Instances"
-                        trailing-icon="i-heroicons-chevron-down-20-solid"
-                    />
-                </UDropdown>
-                <UDropdown
-                    :items="clusterItems"
-                    :popper="{ placement: 'bottom-start' }"
-                >
-                    <UButton
-                        variant="ghost"
-                        color="primary"
-                        size="md"
-                        icon="i-heroicons-server-stack"
-                        label="Cluster"
-                        trailing-icon="i-heroicons-chevron-down-20-solid"
-                    />
-                </UDropdown>
+                <UButton
+                    variant="ghost"
+                    color="primary"
+                    size="md"
+                    icon="i-heroicons-home"
+                    label="Home"
+                    to="/"
+                />
+                <UButton
+                    variant="ghost"
+                    color="primary"
+                    size="md"
+                    icon="i-heroicons-cube-transparent"
+                    label="Proxy Fleet"
+                    to="/proxyfleet"
+                />
+                <UButton
+                    variant="ghost"
+                    color="primary"
+                    size="md"
+                    icon="i-heroicons-cube"
+                    label="Server Fleet"
+                    to="/serversfleet"
+                />
+                <UButton
+                    variant="ghost"
+                    color="primary"
+                    size="md"
+                    icon="i-heroicons-server-stack"
+                    label="Cluster"
+                    to="/minecraftcluster"
+                />
             </div>
             <div class="flex items-center gap-2">
                 <UDropdown

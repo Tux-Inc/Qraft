@@ -27,7 +27,7 @@
 <script setup lang="ts">
 const { $listen } = useNuxtApp();
 const isNewInstanceModalOpen = ref(false);
-$listen("instance:new", (type) => {
+$listen("instance:new", (type: any) => {
     console.log(`New instance of type ${type} created!`);
     isNewInstanceModalOpen.value = true;
 });

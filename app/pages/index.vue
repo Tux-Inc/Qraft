@@ -40,7 +40,7 @@ const sendEvent = (event: string, type: string) => $event(event, type);
 </script>
 
 <template>
-    <div class="flex flex-col gap-8 p-4">
+    <div class="flex flex-col gap-8">
         <div>
             <h1 class="text-4xl font-bold">Home</h1>
             <p class="text-lg">Welcome back, {{ user?.username }}</p>

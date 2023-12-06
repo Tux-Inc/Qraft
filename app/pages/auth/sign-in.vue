@@ -66,7 +66,7 @@ async function onSubmit(event: FormSubmitEvent<any>) {
         toast.add({
             title: "Authentication failed",
             icon: "i-heroicons-x-circle",
-            description: error.message,
+            description: error.data.message,
             color: "red",
         });
         state.isLoading = false;

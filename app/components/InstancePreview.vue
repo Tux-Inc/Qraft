@@ -89,7 +89,9 @@ function getMcServerStatusInfos(status: number): McServerStatusInfos {
     <div class="relative main-div">
         <div
             class="relative flex rounded-lg p-4 border dark:border-gray-700 dark:bg-gray-800 cursor-pointer hover:bg-opacity-80 hover:dark:bg-opacity-80 transition-all border-gray-200 bg-white"
-            @click.prevent="router.push(`/server/${server.id}`)"
+            @click.prevent="
+                router.push(`/${server.type.toLocaleLowerCase()}/${server.id}`)
+            "
         >
             <div class="flex flex-row w-full gap-2">
                 <div>
