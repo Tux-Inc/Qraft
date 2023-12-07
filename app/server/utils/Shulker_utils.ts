@@ -7,14 +7,33 @@ class ShulkerMetadata {
         public namespace: string = config.deployment_namespace,
     ) {}
 }
-class ProxyFleetSpec {
-    constructor(public replicas?: number | null) {
-        // Initialize other properties if needed
-    }
+class ProxyFleetSpecTemplateSpec {
+    constructor(
+        public version: object = { channel: "Velocity", name: "latest" },
+        public config: object = {},
+    ) {}
 }
-
-class ProxyFleetStatus {
-    constructor(public replicas?: number | null) {
+class ProxyFleetSpecTemplate {
+    constructor(
+        public spec: ProxyFleetSpecTemplateSpec = new ProxyFleetSpecTemplateSpec(),
+    ) {}
+}
+class ProxyFleetSpecService {
+    constructor(
+        public type: string = "LoadBalancer",
+        public externalTrafficPolicy: string = "Local",
+    ) {}
+}
+class ClusterRef {
+    constructor(public name: string) {}
+}
+class ProxyFleetSpec {
+    constructor(
+        public clusterRef: ClusterRef,
+        public service: ProxyFleetSpecService = new ProxyFleetSpecService(),
+        public template: ProxyFleetSpecTemplate = new ProxyFleetSpecTemplate(),
+        public replicas: number = 1,
+    ) {
         // Initialize other properties if needed
     }
 }
@@ -22,21 +41,14 @@ class ProxyFleetStatus {
 class ProxyFleet {
     constructor(
         public metadata: ShulkerMetadata,
+        public spec: ProxyFleetSpec,
         public apiVersion: string = "shulkermc.io/v1alpha1",
         public kind: string = "ProxyFleet",
-        public spec?: ProxyFleetSpec,
-        public status?: ProxyFleetStatus,
     ) {}
 }
 
 // MinecraftServer classes
 class MinecraftServerSpec {
-    constructor(public replicas?: number | null) {
-        // Initialize other properties if needed
-    }
-}
-
-class MinecraftServerStatus {
     constructor(public replicas?: number | null) {
         // Initialize other properties if needed
     }
@@ -48,19 +60,37 @@ class MinecraftServer {
         public apiVersion: string = "shulkermc.io/v1alpha1",
         public kind: string = "MinecraftServer",
         public spec?: MinecraftServerSpec,
-        public status?: MinecraftServerStatus,
     ) {}
+}
+class MinecraftServerFleetSpecTemplateSpecVersion {
+    constructor(
+        public channel: string = "Paper",
+        public name: string = "1.20.2",
+    ) {}
+}
+
+class MinecraftServerFleetSpecTemplateSpec {
+    constructor(
+        public clusterRef: ClusterRef,
+        public tags: [] = [],
+        public version: MinecraftServerFleetSpecTemplateSpecVersion = new MinecraftServerFleetSpecTemplateSpecVersion(),
+        public config: object = {},
+    ) {}
+}
+
+class MinecraftServerFleetSpecTemplate {
+    constructor(public spec: MinecraftServerFleetSpecTemplateSpec) {}
 }
 
 // MinecraftServerFleet classes
 class MinecraftServerFleetSpec {
-    constructor(public replicas?: number | null) {
-        // Initialize other properties if needed
-    }
-}
-
-class MinecraftServerFleetStatus {
-    constructor(public replicas?: number | null) {
+    constructor(
+        public clusterRef: ClusterRef,
+        public template: MinecraftServerFleetSpecTemplate = new MinecraftServerFleetSpecTemplate(
+            new MinecraftServerFleetSpecTemplateSpec(clusterRef),
+        ),
+        public replicas: number = 1,
+    ) {
         // Initialize other properties if needed
     }
 }
@@ -68,10 +98,9 @@ class MinecraftServerFleetStatus {
 class MinecraftServerFleet {
     constructor(
         public metadata: ShulkerMetadata,
+        public spec: MinecraftServerFleetSpec,
         public apiVersion: string = "shulkermc.io/v1alpha1",
         public kind: string = "MinecraftServerFleet",
-        public spec?: MinecraftServerFleetSpec,
-        public status?: MinecraftServerFleetStatus,
     ) {}
 }
 
@@ -82,15 +111,12 @@ class MinecraftClusterSpec {
     }
 }
 
-class MinecraftClusterStatus {}
-
 class MinecraftCluster {
     constructor(
         public metadata: ShulkerMetadata,
+        public spec: MinecraftClusterSpec = {},
         public apiVersion: string = "shulkermc.io/v1alpha1",
         public kind: string = "MinecraftCluster",
-        public spec: MinecraftClusterSpec = {},
-        public status?: MinecraftClusterStatus,
     ) {}
 }
 
@@ -98,14 +124,17 @@ export {
     ShulkerMetadata,
     ProxyFleet,
     ProxyFleetSpec,
-    ProxyFleetStatus,
+    ClusterRef,
+    ProxyFleetSpecService,
+    ProxyFleetSpecTemplateSpec,
+    ProxyFleetSpecTemplate,
     MinecraftServer,
     MinecraftServerSpec,
-    MinecraftServerStatus,
     MinecraftServerFleet,
+    MinecraftServerFleetSpecTemplate,
+    MinecraftServerFleetSpecTemplateSpec,
+    MinecraftServerFleetSpecTemplateSpecVersion,
     MinecraftServerFleetSpec,
-    MinecraftServerFleetStatus,
     MinecraftCluster,
     MinecraftClusterSpec,
-    MinecraftClusterStatus,
 };
