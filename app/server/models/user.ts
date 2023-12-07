@@ -27,7 +27,8 @@ export async function deleteUser(id: string): Promise<User> {
     return prisma.user.delete({ where: { id } });
 }
 
-export async function isAdmin(user: User): Promise<boolean> {
+export async function isAdmin(user: User | undefined): Promise<boolean> {
+    if (!user) return false;
     const userFromDb = await getUserById(user.id);
     return userFromDb?.role === "ADMIN";
 }

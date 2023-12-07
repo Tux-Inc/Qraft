@@ -25,9 +25,27 @@ const instanceEditItems = [
         },
     ],
 ];
+const breadCrumbsItems = [
+    {
+        label: "Home",
+        to: "/",
+        icon: "i-heroicons-home",
+    },
+    {
+        label: "Server Fleet",
+        to: "/minecraftserverfleet",
+        icon: "i-heroicons-cube",
+    },
+    {
+        label: "Server-X",
+        to: "/server-fleet/1",
+        icon: "i-heroicons-viewfinder-circle",
+    },
+];
 </script>
 <template>
     <div class="flex flex-col gap-4">
+        <UBreadcrumb :links="breadCrumbsItems" class="mb-4" />
         <div class="flex flex-row flex-wrap justify-between items-center">
             <div>
                 <div class="flex flex-row items-center justify-start gap-2">
@@ -51,11 +69,9 @@ const instanceEditItems = [
                     :popper="{ placement: 'bottom-end' }"
                 >
                     <UButton
-                        color="primary"
+                        color="gray"
                         size="md"
-                        icon="i-heroicons-adjustments-vertical"
-                        label="Manage"
-                        trailing-icon="i-heroicons-chevron-down-20-solid"
+                        icon="i-heroicons-ellipsis-vertical"
                     />
                 </UDropdown>
             </div>

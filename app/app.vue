@@ -15,4 +15,13 @@
     opacity: 0;
     transform: translateX(20px);
 }
+
+.layout-enter-active,
+.layout-leave-active {
+    transition: all 0.2s;
+}
+.layout-enter-from,
+.layout-leave-to {
+    opacity: 0;
+}
 </style>

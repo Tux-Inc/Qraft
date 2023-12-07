@@ -1,5 +1,15 @@
 <script lang="ts" setup>
 const commandPrompt = ref<string>("");
+const accordionItems = [
+    {
+        label: "Console",
+        icon: "i-heroicons-command-line",
+        defaultOpen: true,
+        slot: "console",
+        color: "gray",
+        variant: "ghost",
+    },
+];
 const log =
     "[2023-11-01 10:00:00] INFO: Démarrage du serveur Minecraft\n" +
     "[2023-11-01 10:01:00] INFO: Chargement de la carte\n" +
@@ -112,43 +122,84 @@ const log =
     "[2023-11-01 18:55:00] INFO: Nouvelle épreuve de saut à cheval organisée par Alex\n" +
     "[2023-11-01 19:00:00] INFO: Les joueurs ont lancé une course en bateau";
 </script>
+<style scoped>
+.gradient-fade {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100px;
+    pointer-events: none;
+    opacity: 0.8;
+    transition: opacity 0.2s ease-in-out;
+}
 
+@media (prefers-color-scheme: dark) {
+    .gradient-fade {
+        background: linear-gradient(
+            to bottom,
+            rgba(255, 255, 255, 0),
+            rgba(17, 24, 39, 100) 110%
+        );
+    }
+}
+</style>
 <template>
-    <div
-        class="flex flex-col rounded-xl mx-0 my-4 border xl:ml-0 bg-dark border-b border-gray-700 bg-opacity-30 dark:border-gray-700 dark:bg-gray-800 dark:bg-opacity-30 appearance-none max-h-[500px] overflow-hidden"
-    >
-        <div class="flex text-green-400 text-xs">
-            <div
-                class="mt-2 border-t border-b border-t-transparent border-b-green-400 px-4 py-1 flex items-center">
-                Console
-            </div>
-            <div class="relative flex-auto flex pt-2 rounded-tr-xl">
-                <div
-                    class="flex-auto -mr-px border border-slate-500/30 rounded-tl"
-                >
+    <div>
+        <UAccordion :items="accordionItems">
+            <template #console>
+                <div class="relative">
                     <div
-                        class="absolute -bottom-1 right-0 h-8 flex items-center pr-3"
+                        class="flex flex-col bg-gray-100 dark:bg-gray-800 rounded-xl p-4 max-h-[500px] overflow-hidden border dark:border-gray-700"
                     >
-                        <div class="relative flex -mr-2">
+                        <span
+                            class="text-sm font-bold text-dark dark:text-light"
+                            >Live trace</span
+                        >
+                        <div class="overflow-auto mt-2">
+                            <pre
+                                class="text-sm flex"
+                            ><code class="flex-none">{{ log }}</code></pre>
+                        </div>
+                        <div class="flex flex-row gap-2 mt-2">
+                            <UInput
+                                v-model="commandPrompt"
+                                name="commandPrompt"
+                                placeholder="Enter a command..."
+                                icon="i-heroicons-chevron-right"
+                                autocomplete="off"
+                                :ui="{ icon: { trailing: { pointer: '' } } }"
+                                class="flex-grow"
+                            >
+                                <template #trailing>
+                                    <UButton
+                                        v-show="commandPrompt !== ''"
+                                        color="gray"
+                                        variant="link"
+                                        icon="i-heroicons-x-mark-20-solid"
+                                        :padded="false"
+                                        @click="commandPrompt = ''"
+                                    />
+                                </template>
+                            </UInput>
                             <UButton
-                                :padded=false
                                 color="gray"
                                 variant="link"
-                                icon="i-heroicons-x-mark-20-solid"
+                                icon="i-heroicons-play-solid"
+                                :padded="false"
+                            />
+                            <UButton
+                                color="gray"
+                                variant="link"
+                                icon="i-heroicons-refresh-20-solid"
+                                :padded="false"
                             />
                         </div>
                     </div>
+                    <div class="gradient-fade"></div>
                 </div>
-            </div>
-        </div>
-        <div class="p-2 overflow-auto">
-            <pre
-                class="text-sm flex"
-            ><code class="flex-none">{{log}}</code></pre>
-        </div>
-        <div>
-            <UInput v-model="commandPrompt" placeholder="/ Command there !" />
-        </div>
+            </template>
+        </UAccordion>
     </div>
 </template>
 

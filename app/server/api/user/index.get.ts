@@ -1,5 +1,5 @@
 /*
- * File Name: nuxt.config.ts
+ * File Name: index.get.ts
  * Author: neptos
  * Creation Date: 2023
  *
@@ -24,33 +24,16 @@
  * THE SOFTWARE.
  */
 
-export default defineNuxtConfig({
-    app: {
-        pageTransition: { name: "page", mode: "out-in" },
-        layoutTransition: { name: "layout", mode: "out-in" },
-        head: {
-            title: "Qraft - Minecraft Server Manager",
-        },
-    },
-    postcss: {
-        plugins: {
-            tailwindcss: {},
-            autoprefixer: {},
-        },
-    },
-    css: ["~/assets/css/main.css"],
-    runtimeConfig: {
-        version: "0.0.1",
-        cookieName: process.env.COOKIE_NAME || "qraftauth",
-        cookieSecret: process.env.COOKIE_SECRET,
-        cookieExpires: parseInt(process.env.COOKIE_EXPIRES || "604800"),
-    },
-    typescript: {
-        shim: false,
-    },
-    modules: ["@nuxt/ui", "@nuxt/image"],
-    ui: {
-        icons: ["heroicons", "mdi"],
-    },
-    devtools: { enabled: true },
+import { getUsers, isAdmin } from "~~/server/models/user";
+
+export default defineEventHandler(async (event) => {
+    if (!(await isAdmin(event.context.user))) {
+        return createError({
+            statusCode: 401,
+            message: "You don't have the rights to access this resource",
+        });
+    }
+
+    const usersWithPassword = await getUsers();
+    return usersWithPassword.map(({ password, ...user }) => user);
 });

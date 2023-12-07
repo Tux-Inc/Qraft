@@ -1,5 +1,5 @@
 /*
- * File Name: nuxt.config.ts
+ * File Name: index.post.ts
  * Author: neptos
  * Creation Date: 2023
  *
@@ -24,33 +24,41 @@
  * THE SOFTWARE.
  */
 
-export default defineNuxtConfig({
-    app: {
-        pageTransition: { name: "page", mode: "out-in" },
-        layoutTransition: { name: "layout", mode: "out-in" },
-        head: {
-            title: "Qraft - Minecraft Server Manager",
-        },
-    },
-    postcss: {
-        plugins: {
-            tailwindcss: {},
-            autoprefixer: {},
-        },
-    },
-    css: ["~/assets/css/main.css"],
-    runtimeConfig: {
-        version: "0.0.1",
-        cookieName: process.env.COOKIE_NAME || "qraftauth",
-        cookieSecret: process.env.COOKIE_SECRET,
-        cookieExpires: parseInt(process.env.COOKIE_EXPIRES || "604800"),
-    },
-    typescript: {
-        shim: false,
-    },
-    modules: ["@nuxt/ui", "@nuxt/image"],
-    ui: {
-        icons: ["heroicons", "mdi"],
-    },
-    devtools: { enabled: true },
+import { createUser, isAdmin } from "~/server/models/user";
+import { User } from "~/types/user";
+
+export default defineEventHandler(async (event) => {
+    if (!(await isAdmin(event.context.user))) {
+        return createError({
+            statusCode: 401,
+            message: "You don't have the rights to access this resource",
+        });
+    }
+    const body: User = await readBody<User>(event);
+
+    if (!body) {
+        throw createError({
+            statusCode: 400,
+            statusMessage: "Bad request",
+            message: "Missing body",
+        });
+    }
+
+    if (!body.username || !body.password) {
+        throw createError({
+            statusCode: 400,
+            statusMessage: "Bad request",
+            message: "Missing username or password",
+        });
+    }
+
+    body.password = await hash(body.password);
+
+    const userWithPassword = await createUser(body);
+
+    const { password: _password, ...userWithoutPassword } = userWithPassword;
+
+    return {
+        user: userWithoutPassword,
+    };
 });

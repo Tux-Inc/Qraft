@@ -5,7 +5,7 @@ definePageMeta({
 </script>
 
 <template>
-    <NuxtLayout>
-        <NuxtPage />
-    </NuxtLayout>
+    <div class="flex flex-col gap-4">
+        <h1 class="text-3xl font-bold">Global settings</h1>
+    </div>
 </template>

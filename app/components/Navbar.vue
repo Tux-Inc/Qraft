@@ -59,7 +59,7 @@ const userItems = [
         {
             label: "Sign out",
             icon: "i-heroicons-arrow-left-on-rectangle",
-            onClick: logout,
+            click: () => logout(),
         },
     ],
 ];
@@ -91,6 +91,14 @@ const userItems = [
                     variant="ghost"
                     color="primary"
                     size="md"
+                    icon="i-heroicons-server-stack"
+                    label="Cluster"
+                    to="/minecraftcluster"
+                />
+                <UButton
+                    variant="ghost"
+                    color="primary"
+                    size="md"
                     icon="i-heroicons-cube-transparent"
                     label="Proxy Fleet"
                     to="/proxyfleet"
@@ -101,15 +109,7 @@ const userItems = [
                     size="md"
                     icon="i-heroicons-cube"
                     label="Server Fleet"
-                    to="/serversfleet"
-                />
-                <UButton
-                    variant="ghost"
-                    color="primary"
-                    size="md"
-                    icon="i-heroicons-server-stack"
-                    label="Cluster"
-                    to="/minecraftcluster"
+                    to="/minecraftserverfleet"
                 />
             </div>
             <div class="flex items-center gap-2">
