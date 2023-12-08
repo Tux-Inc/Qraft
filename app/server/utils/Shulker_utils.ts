@@ -36,7 +36,7 @@ class ShulkerMetadata {
 class ProxyFleetSpecTemplateSpec {
     constructor(
         public version: object = { channel: "Velocity", name: "latest" },
-        public config: object = {},
+        public config: Config = new Config(),
     ) {}
 }
 class ProxyFleetSpecTemplate {
@@ -100,7 +100,7 @@ class MinecraftServerFleetSpecTemplateSpec {
         public clusterRef: ClusterRef,
         public tags: [] = [],
         public version: MinecraftServerFleetSpecTemplateSpecVersion = new MinecraftServerFleetSpecTemplateSpecVersion(),
-        public config: object = {},
+        public config: Config = new Config(),
     ) {}
 }
 
@@ -146,6 +146,14 @@ class MinecraftCluster {
     ) {}
 }
 
+class Config {
+    constructor(
+        public plugins?: object,
+        public world?: object,
+        public patches?: object,
+        public maxPlayers: integer = 25,
+    ) {}
+}
 export {
     ShulkerMetadata,
     ProxyFleet,
