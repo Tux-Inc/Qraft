@@ -1,5 +1,5 @@
 /*
- * File Name: nuxt.config.ts
+ * File Name: [name].put.ts
  * Author: neptos
  * Creation Date: 2023
  *
@@ -23,36 +23,3 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
-export default defineNuxtConfig({
-    app: {
-        pageTransition: { name: "page", mode: "out-in" },
-        layoutTransition: { name: "layout", mode: "out-in" },
-        head: {
-            title: "Qraft - Minecraft Server Manager",
-        },
-    },
-    postcss: {
-        plugins: {
-            tailwindcss: {},
-            autoprefixer: {},
-        },
-    },
-    css: ["~/assets/css/main.css"],
-    runtimeConfig: {
-        version: "0.0.1",
-        namespace: "qraft-cluster",
-        deployment_namespace: "qraft",
-        cookieName: process.env.COOKIE_NAME || "qraftauth",
-        cookieSecret: process.env.COOKIE_SECRET,
-        cookieExpires: parseInt(process.env.COOKIE_EXPIRES || "604800"),
-    },
-    typescript: {
-        shim: false,
-    },
-    modules: ["@nuxt/ui", "@nuxt/image"],
-    ui: {
-        icons: ["heroicons", "mdi"],
-    },
-    devtools: { enabled: true },
-});

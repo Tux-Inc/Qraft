@@ -32,6 +32,7 @@ const { logout } = useAuth();
 const toast = useToast();
 definePageMeta({
     layout: "settings",
+    middleware: ["auth"],
 });
 const formState = ref<ChangePassword>({
     oldPassword: "",

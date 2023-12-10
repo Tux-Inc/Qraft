@@ -26,6 +26,7 @@
 <script setup lang="ts">
 definePageMeta({
     layout: "navigation",
+    middleware: ["auth"],
 });
 const breadCrumbsItems = [
     {

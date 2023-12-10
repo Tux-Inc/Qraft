@@ -1,5 +1,5 @@
 /*
- * File Name: nuxt.config.ts
+ * File Name: ProxyFleet.d.ts
  * Author: neptos
  * Creation Date: 2023
  *
@@ -24,35 +24,33 @@
  * THE SOFTWARE.
  */
 
-export default defineNuxtConfig({
-    app: {
-        pageTransition: { name: "page", mode: "out-in" },
-        layoutTransition: { name: "layout", mode: "out-in" },
-        head: {
-            title: "Qraft - Minecraft Server Manager",
-        },
-    },
-    postcss: {
-        plugins: {
-            tailwindcss: {},
-            autoprefixer: {},
-        },
-    },
-    css: ["~/assets/css/main.css"],
-    runtimeConfig: {
-        version: "0.0.1",
-        namespace: "qraft-cluster",
-        deployment_namespace: "qraft",
-        cookieName: process.env.COOKIE_NAME || "qraftauth",
-        cookieSecret: process.env.COOKIE_SECRET,
-        cookieExpires: parseInt(process.env.COOKIE_EXPIRES || "604800"),
-    },
-    typescript: {
-        shim: false,
-    },
-    modules: ["@nuxt/ui", "@nuxt/image"],
-    ui: {
-        icons: ["heroicons", "mdi"],
-    },
-    devtools: { enabled: true },
-});
+interface ProxyFleetConfig {
+    maxPlayers: number;
+    motd: string;
+    proxyProtocol: boolean;
+    serverIcon: string;
+    tllSeconds: number;
+}
+
+interface ProxyFleetCondition {
+    type: string;
+    status: string;
+    lastTransitionTime: string;
+    reason: string;
+    message: string;
+}
+
+interface ProxyFleetStatus {
+    conditions: ProxyFleetCondition[];
+    allocatedReplicas: number;
+    readyReplicas: number;
+    replicas: number;
+}
+interface ProxyFleet {
+    name: string;
+    clusterRefName: string;
+    channel?: string;
+    version?: string;
+    config?: ProxyFleetConfig;
+    status?: ProxyFleetStatus;
+}

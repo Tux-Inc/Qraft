@@ -1,5 +1,5 @@
 <!--
-  - File Name: index.vue
+  - File Name: EmptyList.vue
   - Author: neptos
   - Creation Date: 2023
   -
@@ -23,27 +23,33 @@
   - OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   - THE SOFTWARE.
   -->
+
 <script setup lang="ts">
-definePageMeta({
-    layout: "navigation",
-    middleware: ["auth"],
+defineProps({
+    title: {
+        type: String,
+        required: true,
+    },
+    description: {
+        type: String,
+        required: true,
+    },
 });
-const breadCrumbsItems = [
-    {
-        label: "Home",
-        to: "/",
-        icon: "i-heroicons-home",
-    },
-    {
-        label: "Minecraft Cluster",
-        to: "/minecraftcluster",
-        icon: "i-heroicons-server",
-    },
-];
 </script>
 
 <template>
-    <div class="flex flex-col gap-4">
-        <UBreadcrumb :links="breadCrumbsItems" class="mb-4" />
+    <div
+        class="flex flex-col items-center justify-center border-2 border-gray-200 dark:border-gray-700 rounded-lg p-8"
+    >
+        <UIcon
+            name="i-heroicons-information-circle-solid"
+            class="text-gray-400 dark:text-gray-500 text-5xl"
+        />
+        <span class="text-xl font-bold text-gray-800 dark:text-gray-100">
+            {{ title }}
+        </span>
+        <span class="text-gray-500 dark:text-gray-400">
+            {{ description }}
+        </span>
     </div>
 </template>

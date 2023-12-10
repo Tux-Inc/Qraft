@@ -1,5 +1,5 @@
 /*
- * File Name: nuxt.config.ts
+ * File Name: [name].get.ts
  * Author: neptos
  * Creation Date: 2023
  *
@@ -24,35 +24,38 @@
  * THE SOFTWARE.
  */
 
-export default defineNuxtConfig({
-    app: {
-        pageTransition: { name: "page", mode: "out-in" },
-        layoutTransition: { name: "layout", mode: "out-in" },
-        head: {
-            title: "Qraft - Minecraft Server Manager",
-        },
-    },
-    postcss: {
-        plugins: {
-            tailwindcss: {},
-            autoprefixer: {},
-        },
-    },
-    css: ["~/assets/css/main.css"],
-    runtimeConfig: {
-        version: "0.0.1",
-        namespace: "qraft-cluster",
-        deployment_namespace: "qraft",
-        cookieName: process.env.COOKIE_NAME || "qraftauth",
-        cookieSecret: process.env.COOKIE_SECRET,
-        cookieExpires: parseInt(process.env.COOKIE_EXPIRES || "604800"),
-    },
-    typescript: {
-        shim: false,
-    },
-    modules: ["@nuxt/ui", "@nuxt/image"],
-    ui: {
-        icons: ["heroicons", "mdi"],
-    },
-    devtools: { enabled: true },
+import k8s, { KubeConfig } from "@kubernetes/client-node";
+const kc: KubeConfig = new k8s.KubeConfig();
+kc.loadFromDefault();
+const k8sCRDApi: k8s.CustomObjectsApi = kc.makeApiClient(k8s.CustomObjectsApi);
+
+// Get a MinecraftCluster
+export default defineEventHandler(async (event) => {
+    const config = useRuntimeConfig();
+    const name: string | undefined = getRouterParam(event, "name");
+
+    if (!name) {
+        throw createError({
+            statusCode: 400,
+            statusMessage: "Bad request",
+            message: "Missing MinecraftCluster name",
+        });
+    }
+
+    const response = await k8sCRDApi.getNamespacedCustomObject(
+        "shulkermc.io",
+        "v1alpha1",
+        config.namespace,
+        "minecraftclusters",
+        name,
+    );
+
+    console.log(response.body);
+
+    const minecraftCluster: MinecraftCluster = {
+        name: response.body.metadata.name,
+        networkAdmins: response.body.spec.networkAdmins,
+    };
+
+    return minecraftCluster;
 });

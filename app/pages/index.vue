@@ -26,6 +26,9 @@
 
 <script setup lang="ts">
 import "~/assets/css/main.css";
+import type { MinecraftCluster } from "~/types/kubernetes/MinecraftCluster";
+const { $listen } = useNuxtApp();
+const toast = useToast();
 definePageMeta({
     title: "Home",
     description: "Home page",
@@ -37,6 +40,55 @@ definePageMeta({
 const user = useAuthUser().value?.user;
 const { $event } = useNuxtApp();
 const sendEvent = (event: string, type: string) => $event(event, type);
+
+const minecraftClusters = ref<MinecraftCluster[]>();
+const proxiesFleet = ref<ProxyFleet[]>();
+
+async function getMinecraftClusters(): Promise<MinecraftCluster[]> {
+    try {
+        return await $fetch<MinecraftCluster[]>(
+            "/api/kubernetes/minecraftcluster",
+        );
+    } catch (error: any) {
+        console.log(error);
+        toast.add({
+            title: "Minecraft clusters",
+            icon: "i-heroicons-x-circle",
+            description: "Cannot get infos, is Kubernetes down ?",
+            color: "red",
+        });
+        return [];
+    }
+}
+
+async function getProxiesFleet(): Promise<ProxyFleet[]> {
+    try {
+        return await $fetch<ProxyFleet[]>("/api/kubernetes/proxyfleet");
+    } catch (error: any) {
+        console.log(error);
+        toast.add({
+            title: "Proxies Fleet",
+            icon: "i-heroicons-x-circle",
+            description: "Cannot get infos, is Kubernetes down ?",
+            color: "red",
+        });
+        return [];
+    }
+}
+
+async function refresh() {
+    minecraftClusters.value = await getMinecraftClusters();
+    proxiesFleet.value = await getProxiesFleet();
+}
+
+minecraftClusters.value = await getMinecraftClusters();
+const minecraftClustersLength = computed(() => minecraftClusters.value?.length);
+proxiesFleet.value = await getProxiesFleet();
+const proxiesFleetLength = computed(() => proxiesFleet.value?.length);
+
+$listen("modal:close", async () => {
+    await refresh();
+});
 </script>
 
 <template>
@@ -45,7 +97,35 @@ const sendEvent = (event: string, type: string) => $event(event, type);
             <h1 class="text-4xl font-bold">Home</h1>
             <p class="text-lg">Welcome back, {{ user?.username }}</p>
         </div>
-        <!-- <UsageChart /> -->
+        <InstanceList
+            title="Minecraft cluster"
+            description="Your minecraft clusters"
+        >
+            <template #actions>
+                <UButton
+                    variant="solid"
+                    color="primary"
+                    size="md"
+                    icon="i-heroicons-plus-circle"
+                    label="Create a cluster"
+                    @click="sendEvent('modal:open', 'minecraftcluster')"
+                />
+            </template>
+            <template #elements>
+                <EmptyList
+                    v-if="minecraftClustersLength === 0"
+                    title="No minecraft cluster"
+                    description="No minecraft cluster, create one to get started"
+                />
+                <ClusterPreview
+                    v-else
+                    v-for="minecraftCluster in minecraftClusters"
+                    :key="minecraftCluster.name"
+                    :cluster="minecraftCluster"
+                />
+            </template>
+        </InstanceList>
+
         <InstanceList
             title="Proxy fleet"
             description="Your Minecraft proxies fleet"
@@ -57,11 +137,21 @@ const sendEvent = (event: string, type: string) => $event(event, type);
                     size="md"
                     icon="i-heroicons-plus-circle"
                     label="Create proxy"
-                    @click="sendEvent('instance:new', 'proxy')"
+                    @click="sendEvent('modal:open', 'proxyfleet')"
                 />
             </template>
             <template #elements>
-                <InstancePreview />
+                <EmptyList
+                    v-if="proxiesFleetLength === 0"
+                    title="No proxies fleet"
+                    description="No proxies fleet, create one to get started"
+                />
+                <ProxyFleetPreview
+                    v-else
+                    v-for="proxyFleet in proxiesFleet"
+                    :key="proxyFleet.name"
+                    :proxy-fleet="proxyFleet"
+                />
             </template>
         </InstanceList>
         <InstanceList
@@ -75,13 +165,14 @@ const sendEvent = (event: string, type: string) => $event(event, type);
                     size="md"
                     icon="i-heroicons-plus-circle"
                     label="Create server"
-                    @click="sendEvent('instance:new', 'server')"
+                    @click="sendEvent('modal:open', 'minecraftserverfleet')"
                 />
             </template>
             <template #elements>
-                <InstancePreview />
-                <InstancePreview />
-                <InstancePreview />
+                <EmptyList
+                    title="No servers fleet"
+                    description="No servers fleet, create one to get started"
+                />
             </template>
         </InstanceList>
     </div>

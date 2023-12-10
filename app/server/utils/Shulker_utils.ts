@@ -151,7 +151,7 @@ class Config {
         public plugins?: object,
         public world?: object,
         public patches?: object,
-        public maxPlayers: integer = 25,
+        public maxPlayers: number = 25,
     ) {}
 }
 export {

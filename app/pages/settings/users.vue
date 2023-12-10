@@ -5,6 +5,7 @@ const toast = useToast();
 const sendEvent = (event: string) => $event(event);
 definePageMeta({
     layout: "settings",
+    middleware: ["auth"],
 });
 const authUser = useAuthUser();
 const sort = ref({

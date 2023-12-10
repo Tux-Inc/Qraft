@@ -26,10 +26,14 @@
 
 <script setup lang="ts">
 const { $listen } = useNuxtApp();
-const isNewInstanceModalOpen = ref(false);
-$listen("instance:new", (type: any) => {
-    console.log(`New instance of type ${type} created!`);
-    isNewInstanceModalOpen.value = true;
+const activeModalComponent = ref<string>("");
+const isActiveModal = ref<boolean>(false);
+$listen("modal:open", (type: any) => {
+    isActiveModal.value = true;
+    activeModalComponent.value = type;
+});
+$listen("modal:close", () => {
+    isActiveModal.value = false;
 });
 </script>
 
@@ -44,8 +48,14 @@ $listen("instance:new", (type: any) => {
             </UContainer>
         </div>
         <Footer />
-        <UModal v-model="isNewInstanceModalOpen">
-            <NewInstanceModal />
+        <UModal v-model="isActiveModal">
+            <NewMinecraftClusterModal
+                v-if="activeModalComponent === 'minecraftcluster'"
+            />
+            <NewProxyFleetModal v-if="activeModalComponent === 'proxyfleet'" />
+            <NewMinecraftServerFleetModal
+                v-if="activeModalComponent === 'minecraftserverfleet'"
+            />
         </UModal>
     </div>
 </template>

@@ -1,5 +1,5 @@
 /*
- * File Name: nuxt.config.ts
+ * File Name: index.get.ts
  * Author: neptos
  * Creation Date: 2023
  *
@@ -24,35 +24,29 @@
  * THE SOFTWARE.
  */
 
-export default defineNuxtConfig({
-    app: {
-        pageTransition: { name: "page", mode: "out-in" },
-        layoutTransition: { name: "layout", mode: "out-in" },
-        head: {
-            title: "Qraft - Minecraft Server Manager",
+import k8s, { KubeConfig } from "@kubernetes/client-node";
+const kc: KubeConfig = new k8s.KubeConfig();
+kc.loadFromDefault();
+const k8sCRDApi: k8s.CustomObjectsApi = kc.makeApiClient(k8s.CustomObjectsApi);
+
+// Get all MinecraftClusters
+export default defineEventHandler(async (event) => {
+    const config = useRuntimeConfig();
+    const response = await k8sCRDApi.listNamespacedCustomObject(
+        "shulkermc.io",
+        "v1alpha1",
+        config.namespace,
+        "minecraftclusters",
+    );
+
+    const minecraftClusters: MinecraftCluster[] = response.body.items.map(
+        (item: any) => {
+            return {
+                name: item.metadata.name,
+                networkAdmins: item.spec.networkAdmins,
+            };
         },
-    },
-    postcss: {
-        plugins: {
-            tailwindcss: {},
-            autoprefixer: {},
-        },
-    },
-    css: ["~/assets/css/main.css"],
-    runtimeConfig: {
-        version: "0.0.1",
-        namespace: "qraft-cluster",
-        deployment_namespace: "qraft",
-        cookieName: process.env.COOKIE_NAME || "qraftauth",
-        cookieSecret: process.env.COOKIE_SECRET,
-        cookieExpires: parseInt(process.env.COOKIE_EXPIRES || "604800"),
-    },
-    typescript: {
-        shim: false,
-    },
-    modules: ["@nuxt/ui", "@nuxt/image"],
-    ui: {
-        icons: ["heroicons", "mdi"],
-    },
-    devtools: { enabled: true },
+    );
+
+    return minecraftClusters;
 });
