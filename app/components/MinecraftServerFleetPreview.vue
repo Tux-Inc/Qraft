@@ -1,5 +1,5 @@
 <!--
-  - File Name: ProxyFleetPreview.vue
+  - File Name: MinecraftServerFleetPreview.vue
   - Author: neptos
   - Creation Date: 2023
   -
@@ -26,9 +26,9 @@
 
 <script setup lang="ts">
 const router = useRouter();
-const props = defineProps<{ proxyFleet: ProxyFleet }>();
+const props = defineProps<{ minecraftServerFleet: MinecraftServerFleet }>();
 
-function getProxyFleetStatusIcon(status: PodStatus | undefined) {
+function getMinecraftServerFleetStatusIcon(status: PodStatus | undefined) {
     if (!status) {
         return {
             icon: "i-heroicons-question-mark-circle",
@@ -83,13 +83,17 @@ function getProxyFleetStatusIcon(status: PodStatus | undefined) {
     <div class="relative main-div">
         <div
             class="relative flex rounded-lg p-4 border dark:border-gray-700 dark:bg-gray-800 cursor-pointer hover:bg-opacity-80 hover:dark:bg-opacity-80 transition-all border-gray-200 bg-white"
-            @click.prevent="router.push(`/proxyfleet/${props.proxyFleet.name}`)"
+            @click.prevent="
+                router.push(
+                    `/minecraftserverfleet/${props.minecraftServerFleet.name}`,
+                )
+            "
         >
             <div class="flex flex-row w-full gap-2">
                 <div>
-                    <UTooltip text="Proxy Fleet">
+                    <UTooltip text="Minecraft server fleet">
                         <UIcon
-                            name="i-heroicons-cube-transparent"
+                            name="i-heroicons-cube"
                             class="text-2xl text-gray-700 dark:text-white"
                         />
                     </UTooltip>
@@ -100,23 +104,23 @@ function getProxyFleetStatusIcon(status: PodStatus | undefined) {
                             <span
                                 class="text-xl font-semibold text-gray-700 dark:text-white"
                             >
-                                {{ props.proxyFleet.name }}
+                                {{ props.minecraftServerFleet.name }}
                             </span>
                             <UTooltip
                                 :text="
-                                    props.proxyFleet.status?.conditions[0]
-                                        .message || 'Unknown'
+                                    props.minecraftServerFleet.status
+                                        ?.conditions[0].message || 'Unknown'
                                 "
                             >
                                 <UIcon
                                     :name="
-                                        getProxyFleetStatusIcon(
-                                            props.proxyFleet.status,
+                                        getMinecraftServerFleetStatusIcon(
+                                            props.minecraftServerFleet.status,
                                         ).icon
                                     "
                                     :class="
-                                        getProxyFleetStatusIcon(
-                                            props.proxyFleet.status,
+                                        getMinecraftServerFleetStatusIcon(
+                                            props.minecraftServerFleet.status,
                                         ).colorClass
                                     "
                                     class="text-xl"
@@ -125,15 +129,17 @@ function getProxyFleetStatusIcon(status: PodStatus | undefined) {
                         </div>
                         <div>
                             <span class="text-sm text-gray-400"
-                                >{{ props.proxyFleet.channel }} -
-                                {{ props.proxyFleet.version }}</span
+                                >{{ props.minecraftServerFleet.channel }} -
+                                {{ props.minecraftServerFleet.version }}</span
                             >
                         </div>
                     </div>
                     <UTooltip text="Online Players">
                         <div class="flex flex-row gap-2 items-center">
                             <span class="text-sm text-gray-400"
-                                >?/{{ props.proxyFleet.config.maxPlayers }}
+                                >?/{{
+                                    props.minecraftServerFleet.config.maxPlayers
+                                }}
                             </span>
                             <UIcon
                                 name="i-heroicons-user-group-solid"

@@ -25,8 +25,7 @@
   -->
 
 <script setup lang="ts">
-import type { FormError, FormSubmitEvent } from "@nuxt/ui/dist/runtime/types";
-import type { MinecraftCluster } from "~/types/kubernetes/MinecraftCluster";
+import type { FormSubmitEvent } from "@nuxt/ui/dist/runtime/types";
 const { $event } = useNuxtApp();
 const toast = useToast();
 
@@ -35,6 +34,11 @@ const sendEvent = (event: string) => $event(event);
 const formState = ref<ProxyFleet>({
     name: "",
     clusterRefName: "",
+    config: {
+        maxPlayers: 100,
+        motd: "A minecraft cluster by Qraft",
+        proxyProtocol: false,
+    },
 });
 
 const minecraftClustersNames = ref<string[]>([]);
@@ -57,7 +61,9 @@ async function getMinecraftClustersNames(): Promise<string[]> {
     }
 }
 
-minecraftClustersNames.value = await getMinecraftClustersNames();
+onMounted(async () => {
+    minecraftClustersNames.value = await getMinecraftClustersNames();
+});
 
 async function submit(event: FormSubmitEvent<any>) {
     try {
@@ -120,7 +126,55 @@ async function submit(event: FormSubmitEvent<any>) {
                     id="clusterRefName"
                     v-model="formState.clusterRefName"
                     :options="minecraftClustersNames"
-                    placeholder="My cluster"
+                    placeholder="Select a Minecraft cluster"
+                />
+            </UFormGroup>
+            <UFormGroup
+                label="Max players"
+                description="The maximum number of players on this proxy fleet"
+                name="maxPlayers"
+                required
+            >
+                <UInput
+                    id="maxPlayers"
+                    v-model="formState.config.maxPlayers"
+                    placeholder="100"
+                    type="number"
+                />
+            </UFormGroup>
+            <UFormGroup
+                label="Motd"
+                description="The message of the day of this proxy fleet"
+                name="motd"
+                required
+            >
+                <UInput
+                    id="motd"
+                    v-model="formState.config.motd"
+                    placeholder="My proxy fleet"
+                />
+            </UFormGroup>
+            <UFormGroup
+                label="Proxy protocol"
+                description="The Proxy Protocol is a protocol that allows the load balancer to send the real IP address of the client to the underlying service, here the proxy. It is supported by most cloud providers."
+                name="version"
+                required
+            >
+                <UToggle
+                    id="proxyProtocol"
+                    v-model="formState.config.proxyProtocol"
+                />
+            </UFormGroup>
+            <UFormGroup
+                v-if="formState.config.proxyProtocol"
+                label="Custom annotations"
+                description="Custom annotations to add to the service (required for some cloud providers) in JSON format"
+                name="annotations"
+            >
+                <UTextarea
+                    id="annotations"
+                    v-model="formState.serviceCustomAnnotations"
+                    placeholder="{}"
                 />
             </UFormGroup>
             <div class="flex flex-row items-center justify-end gap-4">

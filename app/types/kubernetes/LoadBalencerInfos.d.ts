@@ -1,5 +1,5 @@
 /*
- * File Name: nuxt.config.ts
+ * File Name: ExternalIp.d.ts
  * Author: neptos
  * Creation Date: 2023
  *
@@ -24,34 +24,19 @@
  * THE SOFTWARE.
  */
 
-export default defineNuxtConfig({
-    app: {
-        pageTransition: { name: "page", mode: "out-in" },
-        layoutTransition: { name: "layout", mode: "out-in" },
-        head: {
-            title: "Qraft - Minecraft Server Manager",
-        },
-    },
-    postcss: {
-        plugins: {
-            tailwindcss: {},
-            autoprefixer: {},
-        },
-    },
-    css: ["~/assets/css/main.css"],
-    runtimeConfig: {
-        version: "0.0.1",
-        namespace: "qraft-cluster",
-        cookieName: process.env.COOKIE_NAME || "qraftauth",
-        cookieSecret: process.env.COOKIE_SECRET,
-        cookieExpires: parseInt(process.env.COOKIE_EXPIRES || "604800"),
-    },
-    typescript: {
-        shim: false,
-    },
-    modules: ["@nuxt/ui", "@nuxt/image"],
-    ui: {
-        icons: ["heroicons", "mdi"],
-    },
-    devtools: { enabled: true },
-});
+interface ExternalIP {
+    ip: string;
+}
+
+interface Port {
+    port: number;
+    protocol: string;
+    targetPort: number;
+    name: string;
+    nodePort: number;
+}
+
+interface LoadBalancerInfos {
+    externalIPs: ExternalIP[];
+    ports: Port[];
+}

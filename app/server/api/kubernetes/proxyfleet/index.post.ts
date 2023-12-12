@@ -64,6 +64,9 @@ export default defineEventHandler(async (event) => {
             service: {
                 type: "LoadBalancer",
                 externalTrafficPolicy: "Local",
+                annotations: body.serviceCustomAnnotations
+                    ? JSON.parse(body.serviceCustomAnnotations)
+                    : {},
             },
             template: {
                 spec: {

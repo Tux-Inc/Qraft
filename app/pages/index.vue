@@ -26,7 +26,6 @@
 
 <script setup lang="ts">
 import "~/assets/css/main.css";
-import type { MinecraftCluster } from "~/types/kubernetes/MinecraftCluster";
 const { $listen } = useNuxtApp();
 const toast = useToast();
 definePageMeta({
@@ -39,52 +38,28 @@ definePageMeta({
 });
 const user = useAuthUser().value?.user;
 const { $event } = useNuxtApp();
+const kube = useKubernetes();
 const sendEvent = (event: string, type: string) => $event(event, type);
 
-const minecraftClusters = ref<MinecraftCluster[]>();
-const proxiesFleet = ref<ProxyFleet[]>();
-
-async function getMinecraftClusters(): Promise<MinecraftCluster[]> {
-    try {
-        return await $fetch<MinecraftCluster[]>(
-            "/api/kubernetes/minecraftcluster",
-        );
-    } catch (error: any) {
-        console.log(error);
-        toast.add({
-            title: "Minecraft clusters",
-            icon: "i-heroicons-x-circle",
-            description: "Cannot get infos, is Kubernetes down ?",
-            color: "red",
-        });
-        return [];
-    }
-}
-
-async function getProxiesFleet(): Promise<ProxyFleet[]> {
-    try {
-        return await $fetch<ProxyFleet[]>("/api/kubernetes/proxyfleet");
-    } catch (error: any) {
-        console.log(error);
-        toast.add({
-            title: "Proxies Fleet",
-            icon: "i-heroicons-x-circle",
-            description: "Cannot get infos, is Kubernetes down ?",
-            color: "red",
-        });
-        return [];
-    }
-}
+const minecraftClusters = ref<MinecraftCluster[] | null>(null);
+const proxiesFleet = ref<ProxyFleet[] | null>(null);
+const minecraftServersFleet = ref<MinecraftServerFleet[] | null>(null);
 
 async function refresh() {
-    minecraftClusters.value = await getMinecraftClusters();
-    proxiesFleet.value = await getProxiesFleet();
+    minecraftClusters.value = await kube.getMinecraftClusters();
+    proxiesFleet.value = await kube.getProxiesFleets();
+    minecraftServersFleet.value = await kube.getMinecraftServersFleet();
 }
 
-minecraftClusters.value = await getMinecraftClusters();
 const minecraftClustersLength = computed(() => minecraftClusters.value?.length);
-proxiesFleet.value = await getProxiesFleet();
 const proxiesFleetLength = computed(() => proxiesFleet.value?.length);
+const minecraftServersFleetLength = computed(
+    () => minecraftServersFleet.value?.length,
+);
+
+onMounted(async () => {
+    await refresh();
+});
 
 $listen("modal:close", async () => {
     await refresh();
@@ -112,6 +87,9 @@ $listen("modal:close", async () => {
                 />
             </template>
             <template #elements>
+                <div v-if="!minecraftClusters" class="flex flex-col gap-2">
+                    <USkeleton class="w-full h-[64px]" />
+                </div>
                 <EmptyList
                     v-if="minecraftClustersLength === 0"
                     title="No minecraft cluster"
@@ -141,6 +119,9 @@ $listen("modal:close", async () => {
                 />
             </template>
             <template #elements>
+                <div v-if="!proxiesFleet" class="flex flex-col gap-2">
+                    <USkeleton class="w-full h-[86px]" />
+                </div>
                 <EmptyList
                     v-if="proxiesFleetLength === 0"
                     title="No proxies fleet"
@@ -154,6 +135,7 @@ $listen("modal:close", async () => {
                 />
             </template>
         </InstanceList>
+
         <InstanceList
             title="Servers fleet"
             description="Your Minecraft servers fleet"
@@ -169,9 +151,19 @@ $listen("modal:close", async () => {
                 />
             </template>
             <template #elements>
+                <div v-if="!minecraftServersFleet" class="flex flex-col gap-2">
+                    <USkeleton class="w-full h-[86px]" />
+                </div>
                 <EmptyList
+                    v-if="minecraftServersFleetLength === 0"
                     title="No servers fleet"
                     description="No servers fleet, create one to get started"
+                />
+                <MinecraftServerFleetPreview
+                    v-else
+                    v-for="minecraftServerFleet in minecraftServersFleet"
+                    :key="minecraftServerFleet.name"
+                    :minecraft-server-fleet="minecraftServerFleet"
                 />
             </template>
         </InstanceList>

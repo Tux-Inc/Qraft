@@ -24,12 +24,19 @@
  * THE SOFTWARE.
  */
 
+interface MinecraftServerFleetConfig {
+    disableEnd?: boolean;
+    disableNether?: boolean;
+    maxPlayers?: number;
+    proxyForwardingMode?: string;
+}
+
 interface MinecraftServerFleet {
     name: string;
     clusterRefName: string;
     tags: string[];
     channel?: string;
     version: string;
-    config?: any;
-    status?: any;
+    config?: MinecraftServerFleetConfig;
+    status?: PodStatus;
 }

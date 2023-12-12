@@ -3,9 +3,10 @@ definePageMeta({
     layout: "navigation",
     middleware: ["auth"],
 });
+
 const kube = useKubernetes();
 const route = useRoute();
-const minecraftServerFleetId = route.params.name;
+const proxyFleetName = route.params.name;
 const instanceEditItems = [
     [
         {
@@ -19,10 +20,7 @@ const instanceEditItems = [
         {
             label: "Delete",
             icon: "i-heroicons-trash",
-            click: () =>
-                kube.deleteMinecraftServerFleet(
-                    minecraftServerFleetId as string,
-                ),
+            click: () => kube.deleteProxyFleet(proxyFleetName as string),
         },
     ],
 ];
@@ -33,18 +31,18 @@ const breadCrumbsItems = [
         icon: "i-heroicons-home",
     },
     {
-        label: "Server Fleet",
-        to: "/minecraftserverfleet",
-        icon: "i-heroicons-cube",
+        label: "Proxy Fleet",
+        to: "/proxyfleet",
+        icon: "i-heroicons-cube-transparent",
     },
     {
-        label: minecraftServerFleetId,
-        to: `/minecraftserverfleet/${minecraftServerFleetId}`,
-        icon: "i-heroicons-cube",
+        label: proxyFleetName,
+        to: `/proxyfleet/${proxyFleetName}`,
+        icon: "i-heroicons-cube-transparent",
     },
 ];
 
-function getMinecraftServerFleetStatusIcon(status: PodStatus | undefined) {
+function getProxyFleetStatusIcon(status: PodStatus | undefined) {
     if (!status) {
         return {
             icon: "i-heroicons-question-mark-circle",
@@ -71,16 +69,16 @@ function getMinecraftServerFleetStatusIcon(status: PodStatus | undefined) {
     }
 }
 
-const minecraftServerFleet = ref<MinecraftServerFleet | null>();
-const minecraftServerFleetLogs = ref<string | null>(null);
-
+const proxyFleet = ref<ProxyFleet | null>();
+const proxyFleetLogs = ref<string | null>();
+const proxyFleetLoadBalancerInfos = ref<LoadBalancerInfos | null>(null);
 onMounted(async () => {
-    minecraftServerFleet.value = await kube.getMinecraftServerFleet(
-        minecraftServerFleetId as string,
+    proxyFleet.value = await kube.getProxyFleet(proxyFleetName as string);
+    proxyFleetLogs.value = await kube.getProxyFleetLogs(
+        proxyFleetName as string,
     );
-    minecraftServerFleetLogs.value = await kube.getMinecraftServerFleetLogs(
-        minecraftServerFleetId as string,
-    );
+    proxyFleetLoadBalancerInfos.value =
+        await kube.getProxyFleetLoadBalancerInfos(proxyFleetName as string);
 });
 </script>
 
@@ -117,42 +115,34 @@ onMounted(async () => {
                         name="i-heroicons-cube-transparent"
                         class="text-3xl font-bold"
                     />
+                    <USkeleton v-if="!proxyFleet" class="h-5 w-[150px]" />
+                    <span v-else class="text-3xl font-bold">{{
+                        proxyFleet.name
+                    }}</span>
                     <USkeleton
-                        v-if="!minecraftServerFleet"
-                        class="h-5 w-[150px]"
-                    />
-                    <span v-else class="text-3xl font-bold">
-                        {{ minecraftServerFleet.name }}
-                    </span>
-                    <USkeleton
-                        v-if="!minecraftServerFleet"
+                        v-if="!proxyFleet"
                         class="h-5 w-5 rounded-full"
                     />
                     <UTooltip
                         v-else
                         :text="
-                            minecraftServerFleet.status?.conditions[0]
-                                .message || 'Unknown'
+                            proxyFleet.status?.conditions[0].message ||
+                            'Unknown'
                         "
                     >
                         <UIcon
                             :name="
-                                getMinecraftServerFleetStatusIcon(
-                                    minecraftServerFleet.status,
-                                ).icon
+                                getProxyFleetStatusIcon(proxyFleet.status).icon
                             "
                             :class="
-                                getMinecraftServerFleetStatusIcon(
-                                    minecraftServerFleet.status,
-                                ).colorClass
+                                getProxyFleetStatusIcon(proxyFleet.status)
+                                    .colorClass
                             "
                             class="text-xl"
                         />
                     </UTooltip>
                 </div>
-                <span class="text-sm text-gray-500"
-                    >Minecraft Server Fleet</span
-                >
+                <span class="text-sm text-gray-500">Proxy Fleet</span>
             </div>
             <div class="flex flex-row flex-wrap gap-2 items-center justify-end">
                 <UDropdown
@@ -214,14 +204,14 @@ onMounted(async () => {
                             >Channel</span
                         >
                         <USkeleton
-                            v-if="!minecraftServerFleet"
+                            v-if="!proxyFleet"
                             :ui="{ background: 'bg-gray-300 dark:bg-gray-500' }"
                             class="h-5 w-10"
                         />
                         <span
                             v-else
                             class="text-sm font-semibold text-gray-700 dark:text-white"
-                            >{{ minecraftServerFleet.channel }}
+                            >{{ proxyFleet.channel }}
                         </span>
                     </div>
                     <div class="flex flex-col">
@@ -230,14 +220,14 @@ onMounted(async () => {
                             >Version</span
                         >
                         <USkeleton
-                            v-if="!minecraftServerFleet"
+                            v-if="!proxyFleet"
                             :ui="{ background: 'bg-gray-300 dark:bg-gray-500' }"
                             class="h-5 w-10"
                         />
                         <span
                             v-else
                             class="text-sm font-semibold text-gray-700 dark:text-white"
-                            >{{ minecraftServerFleet.version }}</span
+                            >{{ proxyFleet.version }}</span
                         >
                     </div>
                 </div>
@@ -245,11 +235,11 @@ onMounted(async () => {
             <div class="gradient-fade"></div>
         </div>
         <usage-chart />
-        <Console :logs="minecraftServerFleetLogs">
+        <Console :logs="proxyFleetLogs">
             <template #logs>
                 <pre
                     class="text-xs dark:text-gray-400 text-gray-600 font-mono whitespace-pre-line"
-                ><code class="flex-none">{{ minecraftServerFleetLogs }}</code></pre>
+                ><code class="flex-none">{{ proxyFleetLogs }}</code></pre>
             </template>
         </Console>
     </div>

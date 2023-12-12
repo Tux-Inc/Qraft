@@ -25,26 +25,11 @@
  */
 
 interface ProxyFleetConfig {
-    maxPlayers: number;
-    motd: string;
-    proxyProtocol: boolean;
-    serverIcon: string;
-    tllSeconds: number;
-}
-
-interface ProxyFleetCondition {
-    type: string;
-    status: string;
-    lastTransitionTime: string;
-    reason: string;
-    message: string;
-}
-
-interface ProxyFleetStatus {
-    conditions: ProxyFleetCondition[];
-    allocatedReplicas: number;
-    readyReplicas: number;
-    replicas: number;
+    maxPlayers?: number;
+    motd?: string;
+    proxyProtocol?: boolean;
+    serverIcon?: string;
+    tllSeconds?: number;
 }
 interface ProxyFleet {
     name: string;
@@ -52,5 +37,6 @@ interface ProxyFleet {
     channel?: string;
     version?: string;
     config?: ProxyFleetConfig;
-    status?: ProxyFleetStatus;
+    status?: PodStatus;
+    serviceCustomAnnotations?: string;
 }

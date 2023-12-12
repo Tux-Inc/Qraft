@@ -24,7 +24,7 @@
  * THE SOFTWARE.
  */
 
-export interface MinecraftCluster {
+interface MinecraftCluster {
     name: string;
     networkAdmins?: string[];
 }

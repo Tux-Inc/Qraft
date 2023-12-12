@@ -25,7 +25,7 @@
   -->
 
 <script setup lang="ts">
-import type { FormError, FormSubmitEvent } from "@nuxt/ui/dist/runtime/types";
+import type { FormSubmitEvent } from "@nuxt/ui/dist/runtime/types";
 import type { MinecraftCluster } from "~/types/kubernetes/MinecraftCluster";
 const { $event } = useNuxtApp();
 const toast = useToast();
@@ -115,12 +115,13 @@ async function submit(event: FormSubmitEvent<any>) {
                 </UButtonGroup>
             </UFormGroup>
 
-            <div
+            <UBadge
                 v-for="(admin, index) in formState.networkAdmins"
                 :key="index"
-                class="flex items-center"
+                color="gray"
+                class="text-sm text-gray-500 flex justify-between items-center"
             >
-                <span class="text-sm text-gray-500">{{ admin }}</span>
+                <span class="">{{ admin }}</span>
                 <UButton
                     size="sm"
                     color="red"
@@ -128,7 +129,7 @@ async function submit(event: FormSubmitEvent<any>) {
                     icon="i-heroicons-x-mark"
                     @click="removeAdmin(index)"
                 />
-            </div>
+            </UBadge>
             <div class="flex flex-row items-center justify-end gap-4">
                 <UButton type="submit" color="primary">Create cluster</UButton>
             </div>
