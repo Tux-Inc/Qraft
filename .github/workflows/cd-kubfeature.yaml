@@ -3,9 +3,17 @@ name: Build and push app Docker image to GitHub
 on:
   push:
     branches:
-      - feature/kubernetes
+      - feature/api
 
 jobs:
+  mirror_to_portfolio:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Mirror to portfolio repo'
+        uses: 'neeptossss/add-to-nuxt-content@v1.8'
+        with:
+          repo: 'neeptossss/portfolio'
+          ssh-key: ${{ secrets.SSH_KEY }}
   build_and_push:
     name: Build and push Docker image
     runs-on: ubuntu-latest
